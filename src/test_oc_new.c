@@ -1,0 +1,108 @@
+#include "tests.h"
+
+#include "oc/oc_new.h"
+
+/* ************************************************ */
+
+struct OC_TestObject {
+    OC_NEW_CLASS;
+    int var;
+    char *text;
+};
+
+static void method_set(void *_self, int _i) {
+    struct OC_TestObject *self = _self;
+    self->var = _i;
+}
+
+static int method_get(void *_self) {
+    struct OC_TestObject *self = _self;
+    return self->var;
+}
+
+static void *ctor(void *_self, va_list *_args) {
+    struct OC_TestObject *self = _self;
+    char *text;
+    self->var = (int)va_arg(*_args, int);
+    text = va_arg(*_args, char*);
+    self->text = malloc(strlen(text));
+    strcpy(self->text,text);
+    return self;
+}
+
+static void *dtor(void *_self) {
+    struct OC_TestObject *self = _self;
+    self->var = 0;
+    free(self->text);
+    self->text = NULL;
+    return self;
+}
+
+static const struct OC_Class _OC_TestObject = {sizeof(struct OC_TestObject), ctor, dtor, NULL};
+static const void * OC_TestObject = &_OC_TestObject;
+
+/* ************************************************ */
+
+static struct OC_TestObject *testObj;
+static struct OC_TestObject *testObj2;
+
+static int test_ctor(void)
+{
+    char *text = "some text";
+    int var = 1234;
+
+    testObj = NULL;
+    testObj = oc_new(OC_TestObject, var, text);
+
+    ASSERT(testObj != NULL);
+    ASSERT(malloc_usable_size(testObj) >= sizeof(struct OC_TestObject));
+    ASSERT(testObj->class == &_OC_TestObject);
+    ASSERT(testObj->var == var);
+    ASSERT(malloc_usable_size(testObj->text) >= strlen(text));
+    ASSERT(strcmp(testObj->text,text) == 0);
+
+    testObj2 = NULL;
+    testObj2 = oc_new(OC_TestObject, var, text);
+
+    ASSERT(testObj2 != testObj);
+
+    ASSERT(testObj2 != NULL);
+    ASSERT(malloc_usable_size(testObj2) >= sizeof(struct OC_TestObject));
+    ASSERT(testObj2->class == &_OC_TestObject);
+    ASSERT(testObj2->var == var);
+    ASSERT(malloc_usable_size(testObj2->text) >= strlen(text));
+    ASSERT(strcmp(testObj2->text,text) == 0);
+
+    return 0;
+}
+
+static int test_method(void)
+{
+    int var = 5678;
+
+    method_set(testObj,var);
+    ASSERT(testObj->var == var);
+
+    var = method_get(testObj);    
+    ASSERT(testObj->var == var);
+
+    return 0;
+}
+
+static int test_dtor(void)
+{
+    oc_delete(testObj);
+    oc_delete(testObj2);
+
+    return 0;
+}
+
+int test_oc_new_all_tests(void)
+{
+    VERIFY(test_ctor);
+    VERIFY(test_method);
+    VERIFY(test_dtor);
+
+    return 0;
+}
+
