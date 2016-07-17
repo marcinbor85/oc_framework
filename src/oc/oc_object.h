@@ -22,6 +22,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
+#ifndef OC_OBJECT_H
+#define OC_OBJECT_H
+
 #include "oc_new.h"
 
 struct oc_object_vtable {
@@ -43,4 +46,6 @@ int oc_object_unlock(void *_self);
 int oc_object_is_locked(void *_self);
 
 extern const void * oc_object;
+
+#endif /* OC_OBJECT_H */
 
