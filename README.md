@@ -10,7 +10,7 @@ Simple Object-Oriented framework for C programming language.
 - abstract objects
 - singleton pattern
 - TDD tests
-- build-in some usefull classes
+- build-in some useful classes
 
 ## The main assumptions of this library
 - lightweight
@@ -18,6 +18,13 @@ Simple Object-Oriented framework for C programming language.
 - code readability
 - portability (embedded systems)
 - easy to understand and to modification
+
+## TODO:
+- [ ] add generic list object
+- [ ] add generic io stream object
+- [ ] add some examples
+- [ ] add source code documentation
+- [ ] portability improvements
 
 ##Simple example:
 ```c
@@ -70,6 +77,4 @@ make
 PASSED
 Tests run: 24
 ```
-
-
 
