@@ -157,27 +157,27 @@ static int test_extended(void)
 
     testExtendedObj->super.vtable = NULL;
 
-    text = oc_object_to_string(testObj);
-    ASSERT(strcmp(text, "oc_object") == 0);
+    text = oc_object_to_string(testExtendedObj);
+    ASSERT(strcmp(text, "oc_extended_test_object") == 0);
     free(text);
     
-    i = oc_object_lock(testObj);
+    i = oc_object_lock(testExtendedObj);
     ASSERT(i == 0);
     ASSERT(testExtendedObj->var == 2);
 
-    i = oc_object_is_locked(testObj);
+    i = oc_object_is_locked(testExtendedObj);
     ASSERT(i != 0);
 
-    i = oc_object_lock(testObj);
+    i = oc_object_lock(testExtendedObj);
     ASSERT(i != 0);
 
-    i = oc_object_is_locked(testObj);
+    i = oc_object_is_locked(testExtendedObj);
     ASSERT(i != 0);
 
-    i = oc_object_unlock(testObj);
+    i = oc_object_unlock(testExtendedObj);
     ASSERT(i == 0);
 
-    i = oc_object_is_locked(testObj);
+    i = oc_object_is_locked(testExtendedObj);
     ASSERT(i == 0);
 
     return 0;

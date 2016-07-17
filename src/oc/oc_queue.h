@@ -22,42 +22,33 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#include "tests.h"
+#ifndef OC_QUEUE_H
+#define OC_QUEUE_H
 
-#include "oc/oc_new.h"
+#include "oc_new.h"
 
-int tests_run = 0;
+#include "oc_object.h"
 
-extern int test_oc_new_all_tests(void);
-extern int test_oc_new_singleton_all_tests(void);
-extern int test_oc_new_inherit_all_tests(void);
-extern int test_oc_new_vtable_all_tests(void);
+struct oc_queue_vtable {
+    int (*put)(void*, void*);
+    int (*get)(void*, void*);
+};
 
-extern int test_oc_object_all_tests(void);
-extern int test_oc_queue_all_tests(void);
+struct oc_queue {
+    OC_NEW_CLASS_EXTENDS(oc_object);
+    struct oc_queue_vtable *vtable;
+    void *data;
+    int buffer_size;
+    int item_size;
+    int count;
+};
 
-static int all_tests(void)
-{
-    INCLUDE(test_oc_new_all_tests);
-    INCLUDE(test_oc_new_singleton_all_tests);
-    INCLUDE(test_oc_new_inherit_all_tests);
-    INCLUDE(test_oc_new_vtable_all_tests);
+int oc_queue_put(void *_self, void *_item);
+int oc_queue_get(void *_self, void *_item);
+int oc_queue_is_empty(void *_self);
+int oc_queue_is_full(void *_self);
 
-    INCLUDE(test_oc_object_all_tests);
-    INCLUDE(test_oc_queue_all_tests);
+extern const void * oc_queue;
 
-    return 0;
-}
-
-int main(int argc, char **argv)
-{
-    int result = all_tests();
-    if (result == 0) {
-        printf("PASSED\n");
-    }
-    printf("Tests run: %d\n", tests_run);
-
-    return result != 0;
-}
-
+#endif /* OC_QUEUE_H */
 

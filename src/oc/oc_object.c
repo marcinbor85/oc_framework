@@ -70,7 +70,7 @@ int oc_object_unlock(void *_self)
     }
 
     self->locked = 0;
-    return self->locked;
+    return 0;
 }
 
 int oc_object_is_locked(void *_self)
