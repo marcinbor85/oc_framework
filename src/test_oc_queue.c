@@ -48,12 +48,24 @@ static int get(void *_self, void *_item)
     return 2;
 }
 
+static char* to_string(void *_self)
+{
+    struct oc_object *self = _self;
+    char *text;
+    const char *example="to_string_queue";
+    text=malloc(strlen(example));
+    strcpy(text,example);
+    return text;
+}
+
+static const struct oc_object_vtable _vtable_object = { .to_string = to_string };
 static const struct oc_queue_vtable _vtable = { .put = put, .get = get };
 
 static void *ctor(void *_self, va_list *_args)
 {
     struct oc_test_queue *self = OC_NEW_SUPER_CTOR(oc_queue, _self, _args);
     self->super.vtable = (struct oc_queue_vtable*)&_vtable;
+    self->super.super.vtable = (struct oc_object_vtable*)&_vtable_object;
     self->var = 0;
     return self;
 }
@@ -89,6 +101,12 @@ static int test_queue(void)
 {
     char *text;
     int i;
+
+    text = oc_object_to_string(testObj);
+    ASSERT(strcmp(text, "to_string_queue") == 0);
+    free(text);
+
+    testObj->super.super.vtable = NULL;
 
     text = oc_object_to_string(testObj);
     ASSERT(strcmp(text, "oc_test_queue") == 0);

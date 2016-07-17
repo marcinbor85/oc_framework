@@ -44,7 +44,6 @@ static char* to_string(void *_self)
     return text;
 }
 
-
 static int lock(void *_self)
 {
     struct oc_extended_test_object *self = _self;
