@@ -24,7 +24,6 @@ THE SOFTWARE.
 
 #include "tests.h"
 
-#include "oc/oc_new.h"
 #include "oc/oc_queue.h"
 
 /* ************************************************ */
@@ -52,8 +51,8 @@ static char* to_string(void *_self)
 {
     struct oc_object *self = _self;
     char *text;
-    const char *example="to_string_queue";
-    text=malloc(strlen(example));
+    const char *example = "to_string_queue";
+    text = malloc(strlen(example));
     strcpy(text,example);
     return text;
 }
@@ -86,8 +85,8 @@ static struct oc_test_queue *testObj;
 
 static int test_start(void)
 {
-    testObj=NULL;
-    testObj=oc_new(oc_test_queue, 4, 1);
+    testObj = NULL;
+    testObj = oc_new(oc_test_queue, 4, 1);
 
     ASSERT(testObj != NULL);
     ASSERT(testObj->super.buffer_size == 4);

@@ -70,6 +70,14 @@ static int test_ctor(void)
     ASSERT(testObj->class == &_oc_test_object);
     ASSERT(testObj->var == var);
 
+    return 0;
+}
+
+static int test_object(void)
+{
+    int var = 1234;
+    int var2 = 5678;
+
     testObj2 = NULL;
     testObj2 = oc_new(oc_test_object, var2);
 
@@ -92,6 +100,7 @@ static int test_dtor(void)
 int test_oc_new_singleton_all_tests(void)
 {
     VERIFY(test_ctor);
+    VERIFY(test_object);
     VERIFY(test_dtor);
 
     return 0;

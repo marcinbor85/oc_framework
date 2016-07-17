@@ -24,7 +24,6 @@ THE SOFTWARE.
 
 #include "tests.h"
 
-#include "oc/oc_new.h"
 #include "oc/oc_object.h"
 
 /* ************************************************ */
@@ -38,8 +37,8 @@ static char* to_string(void *_self)
 {
     struct oc_extended_test_object *self = _self;
     char *text;
-    const char *example="to_string";
-    text=malloc(strlen(example));
+    const char *example = "to_string";
+    text = malloc(strlen(example));
     strcpy(text,example);
     return text;
 }
@@ -131,14 +130,6 @@ static int test_object(void)
     i = oc_object_is_locked(testObj);
     ASSERT(i == 0);
 
-    return 0;
-}
-
-static int test_extended(void)
-{
-    char *text;
-    int i;
-
     text = oc_object_to_string(testExtendedObj);
     ASSERT(strcmp(text, "to_string") == 0);
     free(text);
@@ -199,7 +190,6 @@ int test_oc_object_all_tests(void)
 {
     VERIFY(test_start);
     VERIFY(test_object);
-    VERIFY(test_extended);
     VERIFY(test_stop);
 
     return 0;

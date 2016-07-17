@@ -58,7 +58,7 @@ int oc_queue_is_full(void *_self)
 
 static void *ctor(void *_self, va_list *_args)
 {
-    struct oc_queue *self = _self;
+    struct oc_queue *self = OC_NEW_SUPER_CTOR(oc_object, _self, _args);
     self->buffer_size = (int)va_arg(*_args, int);
     self->item_size = (int)va_arg(*_args, int);
     self->data = calloc(self->buffer_size, self->item_size);
@@ -68,7 +68,7 @@ static void *ctor(void *_self, va_list *_args)
 
 static void *dtor(void *_self)
 {
-    struct oc_queue *self = _self;
+    struct oc_queue *self = OC_NEW_SUPER_DTOR(oc_object, _self);
     free(self->data);
     return self;
 }
