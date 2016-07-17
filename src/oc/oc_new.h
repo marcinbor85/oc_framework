@@ -37,6 +37,8 @@ THE SOFTWARE.
 #define OC_NEW_CLASS_EXTENDS(a) struct a super
 #define OC_NEW_CLASS const void *class
 
+#define oc_delete(a) do { _oc_delete(a); a = NULL; } while (0);
+
 struct oc_class {
     int size;
     void* (*ctor)(void *_self, va_list *_args);
@@ -45,7 +47,7 @@ struct oc_class {
 };
 
 void* oc_new(const void *_class, ...);
-void oc_delete(void *_self);
+void _oc_delete(void *_self);
 
 #endif /* OC_NEW_H */
 

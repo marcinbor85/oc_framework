@@ -119,8 +119,14 @@ static int test_method(void)
 
 static int test_dtor(void)
 {
+    ASSERT(testObj != NULL);
+    ASSERT(testObj2 != NULL);
+
     oc_delete(testObj);
     oc_delete(testObj2);
+
+    ASSERT(testObj == NULL);
+    ASSERT(testObj2 == NULL);
 
     return 0;
 }

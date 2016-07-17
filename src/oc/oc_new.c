@@ -53,7 +53,7 @@ void* oc_new(const void *_class, ...)
     return p;
 }
 
-void oc_delete(void *_self)
+void _oc_delete(void *_self)
 {
     const struct oc_class ** cp = _self;
     const struct oc_class * class;

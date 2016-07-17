@@ -82,7 +82,9 @@ static int test_ctor(void)
 
 static int test_dtor(void)
 {
+    ASSERT(testObj != NULL);
     oc_delete(testObj);
+    ASSERT(testObj == NULL);
 
     return 0;
 }
