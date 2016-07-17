@@ -22,8 +22,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#include "tests.h"
-
 #include "oc_object.h"
 
 char* oc_object_to_string(void *_self)

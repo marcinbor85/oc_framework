@@ -24,21 +24,36 @@ THE SOFTWARE.
 
 #include "tests.h"
 
-#include "oc/oc_new.h"
+#include "../oc/oc_new.h"
 
 /* ************************************************ */
-
-static struct oc_test_object *_singleton;
 
 struct oc_test_object {
     OC_NEW_CLASS;
     int var;
+    char *text;
 };
+
+static void method_set(void *_self, int _i)
+{
+    struct oc_test_object *self = _self;
+    self->var = _i;
+}
+
+static int method_get(void *_self)
+{
+    struct oc_test_object *self = _self;
+    return self->var;
+}
 
 static void *ctor(void *_self, va_list *_args)
 {
     struct oc_test_object *self = _self;
+    char *text;
     self->var = (int)va_arg(*_args, int);
+    text = va_arg(*_args, char*);
+    self->text = malloc(strlen(text));
+    strcpy(self->text,text);
     return self;
 }
 
@@ -46,10 +61,12 @@ static void *dtor(void *_self)
 {
     struct oc_test_object *self = _self;
     self->var = 0;
+    free(self->text);
+    self->text = NULL;
     return self;
 }
 
-static const struct oc_class _oc_test_object = {sizeof(struct oc_test_object), "oc_test_object", ctor, dtor, &_singleton};
+static const struct oc_class _oc_test_object = {sizeof(struct oc_test_object), "oc_test_object", ctor, dtor, NULL};
 static const void * oc_test_object = &_oc_test_object;
 
 /* ************************************************ */
@@ -59,31 +76,43 @@ static struct oc_test_object *testObj2;
 
 static int test_ctor(void)
 {
+    char *text = "some text";
     int var = 1234;
-    int var2 = 5678;
 
     testObj = NULL;
-    testObj = oc_new(oc_test_object, var);
+    testObj = oc_new(oc_test_object, var, text);
 
     ASSERT(testObj != NULL);
     ASSERT(malloc_usable_size(testObj) >= sizeof(struct oc_test_object));
     ASSERT(testObj->class == &_oc_test_object);
     ASSERT(testObj->var == var);
+    ASSERT(malloc_usable_size(testObj->text) >= strlen(text));
+    ASSERT(strcmp(testObj->text,text) == 0);
+
+    testObj2 = NULL;
+    testObj2 = oc_new(oc_test_object, var, text);
+
+    ASSERT(testObj2 != testObj);
+
+    ASSERT(testObj2 != NULL);
+    ASSERT(malloc_usable_size(testObj2) >= sizeof(struct oc_test_object));
+    ASSERT(testObj2->class == &_oc_test_object);
+    ASSERT(testObj2->var == var);
+    ASSERT(malloc_usable_size(testObj2->text) >= strlen(text));
+    ASSERT(strcmp(testObj2->text,text) == 0);
 
     return 0;
 }
 
-static int test_object(void)
+static int test_method(void)
 {
-    int var = 1234;
-    int var2 = 5678;
+    int var = 5678;
 
-    testObj2 = NULL;
-    testObj2 = oc_new(oc_test_object, var2);
+    method_set(testObj,var);
+    ASSERT(testObj->var == var);
 
-    ASSERT(testObj2 == testObj);
-    ASSERT(testObj2->var == testObj->var);
-    ASSERT(testObj2->var == var);
+    var = method_get(testObj);
+    ASSERT(testObj->var == var);
 
     return 0;
 }
@@ -91,16 +120,21 @@ static int test_object(void)
 static int test_dtor(void)
 {
     ASSERT(testObj != NULL);
+    ASSERT(testObj2 != NULL);
+
     oc_delete(testObj);
+    oc_delete(testObj2);
+
     ASSERT(testObj == NULL);
+    ASSERT(testObj2 == NULL);
 
     return 0;
 }
 
-int test_oc_new_singleton_all_tests(void)
+int test_oc_new_all_tests(void)
 {
     VERIFY(test_ctor);
-    VERIFY(test_object);
+    VERIFY(test_method);
     VERIFY(test_dtor);
 
     return 0;

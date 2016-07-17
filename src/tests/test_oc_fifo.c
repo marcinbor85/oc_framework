@@ -24,7 +24,7 @@ THE SOFTWARE.
 
 #include "tests.h"
 
-#include "oc/oc_fifo.h"
+#include "../oc/oc_fifo.h"
 
 static struct oc_fifo *testObj;
 

@@ -24,7 +24,7 @@ THE SOFTWARE.
 
 #include "tests.h"
 
-#include "oc/oc_new.h"
+#include "../oc/oc_new.h"
 
 int tests_run = 0;
 

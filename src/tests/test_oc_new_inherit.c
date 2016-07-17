@@ -24,14 +24,13 @@ THE SOFTWARE.
 
 #include "tests.h"
 
-#include "oc/oc_new.h"
+#include "../oc/oc_new.h"
 
 /* ************************************************ */
 
 struct oc_test_object {
     OC_NEW_CLASS;
     int var;
-    char *text;
 };
 
 static void method_set(void *_self, int _i)
@@ -40,79 +39,86 @@ static void method_set(void *_self, int _i)
     self->var = _i;
 }
 
-static int method_get(void *_self)
+static void *oc_test_object_ctor(void *_self, va_list *_args)
 {
     struct oc_test_object *self = _self;
-    return self->var;
-}
-
-static void *ctor(void *_self, va_list *_args)
-{
-    struct oc_test_object *self = _self;
-    char *text;
     self->var = (int)va_arg(*_args, int);
-    text = va_arg(*_args, char*);
-    self->text = malloc(strlen(text));
-    strcpy(self->text,text);
     return self;
 }
 
-static void *dtor(void *_self)
+static void *oc_test_object_dtor(void *_self)
 {
     struct oc_test_object *self = _self;
     self->var = 0;
-    free(self->text);
-    self->text = NULL;
     return self;
 }
 
-static const struct oc_class _oc_test_object = {sizeof(struct oc_test_object), "oc_test_object", ctor, dtor, NULL};
+static const struct oc_class _oc_test_object = {sizeof(struct oc_test_object), "oc_test_object", oc_test_object_ctor, oc_test_object_dtor, NULL};
 static const void * oc_test_object = &_oc_test_object;
 
 /* ************************************************ */
 
+struct oc_extended_test_object {
+    OC_NEW_CLASS_EXTENDS(oc_test_object);
+    int var2;
+};
+
+static void *oc_extended_test_object_ctor(void *_self, va_list *_args)
+{
+    struct oc_extended_test_object *self = OC_NEW_SUPER_CTOR(oc_test_object, _self, _args);
+    self->var2 = (int)va_arg(*_args, int);
+    return self;
+}
+
+static void *oc_extended_test_object_dtor(void *_self)
+{
+    struct oc_extended_test_object *self = OC_NEW_SUPER_DTOR(oc_test_object, _self);
+    self->var2 = 0;
+    return self;
+}
+
+static const struct oc_class _oc_extended_test_object = {sizeof(struct oc_extended_test_object), "oc_extended_test_object", oc_extended_test_object_ctor, oc_extended_test_object_dtor, NULL};
+static const void * oc_extended_test_object = &_oc_extended_test_object;
+
+/* ************************************************ */
+
 static struct oc_test_object *testObj;
-static struct oc_test_object *testObj2;
+static struct oc_extended_test_object *testExtendedObj;
 
 static int test_ctor(void)
 {
-    char *text = "some text";
     int var = 1234;
+    int var2 = 5678;
 
-    testObj = NULL;
-    testObj = oc_new(oc_test_object, var, text);
+    testObj=NULL;
+    testObj=oc_new(oc_test_object, var);
 
     ASSERT(testObj != NULL);
     ASSERT(malloc_usable_size(testObj) >= sizeof(struct oc_test_object));
     ASSERT(testObj->class == &_oc_test_object);
     ASSERT(testObj->var == var);
-    ASSERT(malloc_usable_size(testObj->text) >= strlen(text));
-    ASSERT(strcmp(testObj->text,text) == 0);
 
-    testObj2 = NULL;
-    testObj2 = oc_new(oc_test_object, var, text);
+    testExtendedObj = NULL;
+    testExtendedObj = oc_new(oc_extended_test_object, var, var2);
 
-    ASSERT(testObj2 != testObj);
-
-    ASSERT(testObj2 != NULL);
-    ASSERT(malloc_usable_size(testObj2) >= sizeof(struct oc_test_object));
-    ASSERT(testObj2->class == &_oc_test_object);
-    ASSERT(testObj2->var == var);
-    ASSERT(malloc_usable_size(testObj2->text) >= strlen(text));
-    ASSERT(strcmp(testObj2->text,text) == 0);
+    ASSERT(testExtendedObj != NULL);
+    ASSERT(malloc_usable_size(testExtendedObj) >= sizeof(struct oc_extended_test_object));
+    ASSERT(testExtendedObj->super.class == oc_extended_test_object);
+    ASSERT(testExtendedObj->super.var == var);
+    ASSERT(testExtendedObj->var2 == var2);
 
     return 0;
 }
 
 static int test_method(void)
 {
-    int var = 5678;
+    int var = 9999;
 
     method_set(testObj,var);
-    ASSERT(testObj->var == var);
+    method_set(testExtendedObj,var);
 
-    var = method_get(testObj);
     ASSERT(testObj->var == var);
+    ASSERT(testExtendedObj->super.var == var);
 
     return 0;
 }
@@ -120,18 +126,18 @@ static int test_method(void)
 static int test_dtor(void)
 {
     ASSERT(testObj != NULL);
-    ASSERT(testObj2 != NULL);
+    ASSERT(testExtendedObj != NULL);
 
     oc_delete(testObj);
-    oc_delete(testObj2);
+    oc_delete(testExtendedObj);
 
     ASSERT(testObj == NULL);
-    ASSERT(testObj2 == NULL);
+    ASSERT(testExtendedObj == NULL);
 
     return 0;
 }
 
-int test_oc_new_all_tests(void)
+int test_oc_new_inherit_all_tests(void)
 {
     VERIFY(test_ctor);
     VERIFY(test_method);
