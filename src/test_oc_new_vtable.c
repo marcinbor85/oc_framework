@@ -75,7 +75,7 @@ static void *oc_abstract_test_object_dtor(void *_self)
     return self;
 }
 
-static const struct oc_class _oc_abstract_test_object = {sizeof(struct oc_abstract_test_object), oc_abstract_test_object_ctor, oc_abstract_test_object_dtor, NULL};
+static const struct oc_class _oc_abstract_test_object = {sizeof(struct oc_abstract_test_object), "oc_abstract_test_object", oc_abstract_test_object_ctor, oc_abstract_test_object_dtor, NULL};
 static const void * oc_abstract_test_object = &_oc_abstract_test_object;
 
 /* ************************************************ */
@@ -116,7 +116,7 @@ static void *oc_extended_test_object_dtor(void *_self)
     return self;
 }
 
-static const struct oc_class _oc_extended_test_object = {sizeof(struct oc_extended_test_object), oc_extended_test_object_ctor, oc_extended_test_object_dtor, NULL};
+static const struct oc_class _oc_extended_test_object = {sizeof(struct oc_extended_test_object), "oc_extended_test_object", oc_extended_test_object_ctor, oc_extended_test_object_dtor, NULL};
 static const void * oc_extended_test_object = &_oc_extended_test_object;
 
 /* ************************************************ */

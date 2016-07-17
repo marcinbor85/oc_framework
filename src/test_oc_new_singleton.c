@@ -49,7 +49,7 @@ static void *dtor(void *_self)
     return self;
 }
 
-static const struct oc_class _oc_test_object = {sizeof(struct oc_test_object), ctor, dtor, &_singleton};
+static const struct oc_class _oc_test_object = {sizeof(struct oc_test_object), "oc_test_object", ctor, dtor, &_singleton};
 static const void * oc_test_object = &_oc_test_object;
 
 /* ************************************************ */

@@ -41,6 +41,7 @@ THE SOFTWARE.
 
 struct oc_class {
     int size;
+    const char* name;
     void* (*ctor)(void *_self, va_list *_args);
     void* (*dtor)(void *_self);
     void* singleton;
