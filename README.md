@@ -1,8 +1,7 @@
 # oc_framework
-
 Simple Object-Oriented framework for C programming language.
 
-Main features:
+## Main features
 - classes
 - single inheritance
 - virtual table pointer
@@ -13,15 +12,15 @@ Main features:
 - TDD tests
 - build-in some usefull classes
 
-The main assumptions of this library:
+## The main assumptions of this library
 - lightweight
 - educational aspects
 - code readability
 - portability (embedded systems)
 - easy to understand and to modification
 
-Simple example:
-```
+##Simple example:
+```c
 #include <oc/fifo.h>
 
 #include <stdio.h>
@@ -52,7 +51,7 @@ int main(void)
 }
 ```
 
-Compile library (liboc.a) and run tests:
+## Compile library (liboc.a) and run tests:
 
 ```sh
 mkdir build
@@ -65,9 +64,9 @@ make
 ./src/tests/tests
 ```
 
-Output example:
+## Output example:
 
-```
+```sh
 PASSED
 Tests run: 24
 ```
