@@ -39,33 +39,38 @@ struct oc_abstract_test_object {
     struct oc_abstract_test_object_vtable *vtable;
 };
 
-static int method_set(void *_self, void *_i) {
-    struct oc_abstract_test_object *self=_self;
+static int method_set(void *_self, void *_i)
+{
+    struct oc_abstract_test_object *self = _self;
     if (self->vtable == NULL) return -1;
     if (self->vtable->set == NULL) return -1;
     return self->vtable->set(_self, _i);
 }
 
-static int method_get(void *_self, void *_i) {
-    struct oc_abstract_test_object *self=_self;
+static int method_get(void *_self, void *_i)
+{
+    struct oc_abstract_test_object *self = _self;
     if (self->vtable == NULL) return -1;
     if (self->vtable->get == NULL) return -1;
     return self->vtable->get(_self, _i);
 }
 
-static int method_change(void *_self) {
-    struct oc_abstract_test_object *self=_self;
+static int method_change(void *_self)
+{
+    struct oc_abstract_test_object *self = _self;
     if (self->vtable == NULL) return -1;
     if (self->vtable->change == NULL) return -1;
     return self->vtable->change(_self);
 }
 
-static void *oc_abstract_test_object_ctor(void *_self, va_list *_args) {
+static void *oc_abstract_test_object_ctor(void *_self, va_list *_args)
+{
     struct oc_abstract_test_object *self = _self;
     return self;
 }
 
-static void *oc_abstract_test_object_dtor(void *_self) {
+static void *oc_abstract_test_object_dtor(void *_self)
+{
     struct oc_abstract_test_object *self = _self;
     return self;
 }
@@ -80,13 +85,15 @@ struct oc_extended_test_object {
     int var;
 };
 
-static int _set(void *_self, void *_i) {
+static int _set(void *_self, void *_i)
+{
     struct oc_extended_test_object *self = _self;
     self->var = *(int*)_i;
     return 0;
 }
 
-static int _get(void *_self, void *_i) {
+static int _get(void *_self, void *_i)
+{
     struct oc_extended_test_object *self = _self;
     *(int*)_i = self->var;
     return 0;
@@ -94,14 +101,16 @@ static int _get(void *_self, void *_i) {
 
 static const struct oc_abstract_test_object_vtable _vtable = { .set = _set, .get = _get };
 
-static void *oc_extended_test_object_ctor(void *_self, va_list *_args) {
+static void *oc_extended_test_object_ctor(void *_self, va_list *_args)
+{
     struct oc_extended_test_object *self = OC_NEW_SUPER_CTOR(oc_abstract_test_object, _self, _args);
     self->super.vtable = (struct oc_abstract_test_object_vtable*)&_vtable;
     self->var = (int)va_arg(*_args, int);
     return self;
 }
 
-static void *oc_extended_test_object_dtor(void *_self) {
+static void *oc_extended_test_object_dtor(void *_self)
+{
     struct oc_extended_test_object *self = OC_NEW_SUPER_DTOR(oc_abstract_test_object,_self);
     self->var = 0;
     return self;

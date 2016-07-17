@@ -33,18 +33,21 @@ struct oc_test_object {
     int var;
 };
 
-static void method_set(void *_self, int _i) {
+static void method_set(void *_self, int _i)
+{
     struct oc_test_object *self = _self;
     self->var = _i;
 }
 
-static void *oc_test_object_ctor(void *_self, va_list *_args) {
+static void *oc_test_object_ctor(void *_self, va_list *_args)
+{
     struct oc_test_object *self = _self;
     self->var = (int)va_arg(*_args, int);
     return self;
 }
 
-static void *oc_test_object_dtor(void *_self) {
+static void *oc_test_object_dtor(void *_self)
+{
     struct oc_test_object *self = _self;
     self->var = 0;
     return self;
@@ -60,14 +63,16 @@ struct oc_extended_test_object {
     int var2;
 };
 
-static void *oc_extended_test_object_ctor(void *_self, va_list *_args) {
+static void *oc_extended_test_object_ctor(void *_self, va_list *_args)
+{
     struct oc_extended_test_object *self = OC_NEW_SUPER_CTOR(oc_test_object, _self, _args);
     self->var2 = (int)va_arg(*_args, int);
     return self;
 }
 
-static void *oc_extended_test_object_dtor(void *_self) {
-    struct oc_extended_test_object *self = OC_NEW_SUPER_DTOR(oc_test_object,_self);
+static void *oc_extended_test_object_dtor(void *_self)
+{
+    struct oc_extended_test_object *self = OC_NEW_SUPER_DTOR(oc_test_object, _self);
     self->var2 = 0;
     return self;
 }

@@ -35,13 +35,15 @@ struct oc_test_object {
     int var;
 };
 
-static void *ctor(void *_self, va_list *_args) {
+static void *ctor(void *_self, va_list *_args)
+{
     struct oc_test_object *self = _self;
     self->var = (int)va_arg(*_args, int);
     return self;
 }
 
-static void *dtor(void *_self) {
+static void *dtor(void *_self)
+{
     struct oc_test_object *self = _self;
     self->var = 0;
     return self;

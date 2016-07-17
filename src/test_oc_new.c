@@ -34,17 +34,20 @@ struct oc_test_object {
     char *text;
 };
 
-static void method_set(void *_self, int _i) {
+static void method_set(void *_self, int _i)
+{
     struct oc_test_object *self = _self;
     self->var = _i;
 }
 
-static int method_get(void *_self) {
+static int method_get(void *_self)
+{
     struct oc_test_object *self = _self;
     return self->var;
 }
 
-static void *ctor(void *_self, va_list *_args) {
+static void *ctor(void *_self, va_list *_args)
+{
     struct oc_test_object *self = _self;
     char *text;
     self->var = (int)va_arg(*_args, int);
@@ -54,7 +57,8 @@ static void *ctor(void *_self, va_list *_args) {
     return self;
 }
 
-static void *dtor(void *_self) {
+static void *dtor(void *_self)
+{
     struct oc_test_object *self = _self;
     self->var = 0;
     free(self->text);
@@ -107,7 +111,7 @@ static int test_method(void)
     method_set(testObj,var);
     ASSERT(testObj->var == var);
 
-    var = method_get(testObj);    
+    var = method_get(testObj);
     ASSERT(testObj->var == var);
 
     return 0;
