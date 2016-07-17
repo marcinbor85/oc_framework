@@ -10,6 +10,7 @@ Main features:
 - Dynamic Memory Allocation
 - Abstract Objects
 - Singleton Pattern
+- TDD tests
 
 Compile library and run tests:
 
