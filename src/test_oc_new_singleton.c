@@ -28,32 +28,32 @@ THE SOFTWARE.
 
 /* ************************************************ */
 
-static struct OC_TestObject *_singleton;
+static struct oc_test_object *_singleton;
 
-struct OC_TestObject {
+struct oc_test_object {
     OC_NEW_CLASS;
     int var;
 };
 
 static void *ctor(void *_self, va_list *_args) {
-    struct OC_TestObject *self = _self;
+    struct oc_test_object *self = _self;
     self->var = (int)va_arg(*_args, int);
     return self;
 }
 
 static void *dtor(void *_self) {
-    struct OC_TestObject *self = _self;
+    struct oc_test_object *self = _self;
     self->var = 0;
     return self;
 }
 
-static const struct OC_Class _OC_TestObject = {sizeof(struct OC_TestObject), ctor, dtor, &_singleton};
-static const void * OC_TestObject = &_OC_TestObject;
+static const struct oc_class _oc_test_object = {sizeof(struct oc_test_object), ctor, dtor, &_singleton};
+static const void * oc_test_object = &_oc_test_object;
 
 /* ************************************************ */
 
-static struct OC_TestObject *testObj;
-static struct OC_TestObject *testObj2;
+static struct oc_test_object *testObj;
+static struct oc_test_object *testObj2;
 
 static int test_ctor(void)
 {
@@ -61,15 +61,15 @@ static int test_ctor(void)
     int var2 = 5678;
 
     testObj = NULL;
-    testObj = oc_new(OC_TestObject, var);
+    testObj = oc_new(oc_test_object, var);
 
     ASSERT(testObj != NULL);
-    ASSERT(malloc_usable_size(testObj) >= sizeof(struct OC_TestObject));
-    ASSERT(testObj->class == &_OC_TestObject);
+    ASSERT(malloc_usable_size(testObj) >= sizeof(struct oc_test_object));
+    ASSERT(testObj->class == &_oc_test_object);
     ASSERT(testObj->var == var);
 
     testObj2 = NULL;
-    testObj2 = oc_new(OC_TestObject, var2);
+    testObj2 = oc_new(oc_test_object, var2);
 
     ASSERT(testObj2 == testObj);
     ASSERT(testObj2->var == testObj->var);

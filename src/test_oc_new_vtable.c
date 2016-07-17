@@ -28,103 +28,103 @@ THE SOFTWARE.
 
 /* ************************************************ */
 
-struct OC_AbstractTestObject_VTable {
+struct oc_abstract_test_object_vtable {
     int (*set)(void *, void *);
     int (*get)(void *, void *);
     int (*change)(void *);
 };
 
-struct OC_AbstractTestObject {
+struct oc_abstract_test_object {
     OC_NEW_CLASS;
-    struct OC_AbstractTestObject_VTable *vTable;
+    struct oc_abstract_test_object_vtable *vtable;
 };
 
 static int method_set(void *_self, void *_i) {
-    struct OC_AbstractTestObject *self=_self;
-    if (self->vTable == NULL) return -1;
-    if (self->vTable->set == NULL) return -1;
-    return self->vTable->set(_self, _i);
+    struct oc_abstract_test_object *self=_self;
+    if (self->vtable == NULL) return -1;
+    if (self->vtable->set == NULL) return -1;
+    return self->vtable->set(_self, _i);
 }
 
 static int method_get(void *_self, void *_i) {
-    struct OC_AbstractTestObject *self=_self;
-    if (self->vTable == NULL) return -1;
-    if (self->vTable->get == NULL) return -1;
-    return self->vTable->get(_self, _i);
+    struct oc_abstract_test_object *self=_self;
+    if (self->vtable == NULL) return -1;
+    if (self->vtable->get == NULL) return -1;
+    return self->vtable->get(_self, _i);
 }
 
 static int method_change(void *_self) {
-    struct OC_AbstractTestObject *self=_self;
-    if (self->vTable == NULL) return -1;
-    if (self->vTable->change == NULL) return -1;
-    return self->vTable->change(_self);
+    struct oc_abstract_test_object *self=_self;
+    if (self->vtable == NULL) return -1;
+    if (self->vtable->change == NULL) return -1;
+    return self->vtable->change(_self);
 }
 
-static void *OC_AbstractTestObject_ctor(void *_self, va_list *_args) {
-    struct OC_AbstractTestObject *self = _self;
+static void *oc_abstract_test_object_ctor(void *_self, va_list *_args) {
+    struct oc_abstract_test_object *self = _self;
     return self;
 }
 
-static void *OC_AbstractTestObject_dtor(void *_self) {
-    struct OC_AbstractTestObject *self = _self;
+static void *oc_abstract_test_object_dtor(void *_self) {
+    struct oc_abstract_test_object *self = _self;
     return self;
 }
 
-static const struct OC_Class _OC_AbstractTestObject = {sizeof(struct OC_AbstractTestObject), OC_AbstractTestObject_ctor, OC_AbstractTestObject_dtor, NULL};
-static const void * OC_AbstractTestObject = &_OC_AbstractTestObject;
+static const struct oc_class _oc_abstract_test_object = {sizeof(struct oc_abstract_test_object), oc_abstract_test_object_ctor, oc_abstract_test_object_dtor, NULL};
+static const void * oc_abstract_test_object = &_oc_abstract_test_object;
 
 /* ************************************************ */
 
-struct OC_ExtendedTestObject {
-    OC_NEW_CLASS_EXTENDS(OC_AbstractTestObject);
+struct oc_extended_test_object {
+    OC_NEW_CLASS_EXTENDS(oc_abstract_test_object);
     int var;
 };
 
 static int _set(void *_self, void *_i) {
-    struct OC_ExtendedTestObject *self = _self;
+    struct oc_extended_test_object *self = _self;
     self->var = *(int*)_i;
     return 0;
 }
 
 static int _get(void *_self, void *_i) {
-    struct OC_ExtendedTestObject *self = _self;
+    struct oc_extended_test_object *self = _self;
     *(int*)_i = self->var;
     return 0;
 }
 
-static const struct OC_AbstractTestObject_VTable _vTable = { .set = _set, .get = _get };
+static const struct oc_abstract_test_object_vtable _vtable = { .set = _set, .get = _get };
 
-static void *OC_ExtendedTestObject_ctor(void *_self, va_list *_args) {
-    struct OC_ExtendedTestObject *self = OC_NEW_SUPER_CTOR(OC_AbstractTestObject, _self, _args);
-    self->super.vTable = (struct OC_AbstractTestObject_VTable*)&_vTable;
+static void *oc_extended_test_object_ctor(void *_self, va_list *_args) {
+    struct oc_extended_test_object *self = OC_NEW_SUPER_CTOR(oc_abstract_test_object, _self, _args);
+    self->super.vtable = (struct oc_abstract_test_object_vtable*)&_vtable;
     self->var = (int)va_arg(*_args, int);
     return self;
 }
 
-static void *OC_ExtendedTestObject_dtor(void *_self) {
-    struct OC_ExtendedTestObject *self = OC_NEW_SUPER_DTOR(OC_AbstractTestObject,_self);
+static void *oc_extended_test_object_dtor(void *_self) {
+    struct oc_extended_test_object *self = OC_NEW_SUPER_DTOR(oc_abstract_test_object,_self);
     self->var = 0;
     return self;
 }
 
-static const struct OC_Class _OC_ExtendedTestObject = {sizeof(struct OC_ExtendedTestObject), OC_ExtendedTestObject_ctor, OC_ExtendedTestObject_dtor, NULL};
-static const void * OC_ExtendedTestObject = &_OC_ExtendedTestObject;
+static const struct oc_class _oc_extended_test_object = {sizeof(struct oc_extended_test_object), oc_extended_test_object_ctor, oc_extended_test_object_dtor, NULL};
+static const void * oc_extended_test_object = &_oc_extended_test_object;
 
 /* ************************************************ */
 
-static struct OC_ExtendedTestObject *testObj;
+static struct oc_extended_test_object *testObj;
 
 static int test_ctor(void)
 {
     int var = 1234;
 
     testObj=NULL;
-    testObj=oc_new(OC_ExtendedTestObject, var);
+    testObj=oc_new(oc_extended_test_object, var);
 
     ASSERT(testObj != NULL);
-    ASSERT(malloc_usable_size(testObj) >= sizeof(struct OC_ExtendedTestObject));
-    ASSERT(testObj->super.class == OC_ExtendedTestObject);
-    ASSERT(testObj->super.vTable == &_vTable);
+    ASSERT(malloc_usable_size(testObj) >= sizeof(struct oc_extended_test_object));
+    ASSERT(testObj->super.class == oc_extended_test_object);
+    ASSERT(testObj->super.vtable == &_vtable);
     ASSERT(testObj->var == var);
 
     return 0;

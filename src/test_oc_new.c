@@ -28,24 +28,24 @@ THE SOFTWARE.
 
 /* ************************************************ */
 
-struct OC_TestObject {
+struct oc_test_object {
     OC_NEW_CLASS;
     int var;
     char *text;
 };
 
 static void method_set(void *_self, int _i) {
-    struct OC_TestObject *self = _self;
+    struct oc_test_object *self = _self;
     self->var = _i;
 }
 
 static int method_get(void *_self) {
-    struct OC_TestObject *self = _self;
+    struct oc_test_object *self = _self;
     return self->var;
 }
 
 static void *ctor(void *_self, va_list *_args) {
-    struct OC_TestObject *self = _self;
+    struct oc_test_object *self = _self;
     char *text;
     self->var = (int)va_arg(*_args, int);
     text = va_arg(*_args, char*);
@@ -55,20 +55,20 @@ static void *ctor(void *_self, va_list *_args) {
 }
 
 static void *dtor(void *_self) {
-    struct OC_TestObject *self = _self;
+    struct oc_test_object *self = _self;
     self->var = 0;
     free(self->text);
     self->text = NULL;
     return self;
 }
 
-static const struct OC_Class _OC_TestObject = {sizeof(struct OC_TestObject), ctor, dtor, NULL};
-static const void * OC_TestObject = &_OC_TestObject;
+static const struct oc_class _oc_test_object = {sizeof(struct oc_test_object), ctor, dtor, NULL};
+static const void * oc_test_object = &_oc_test_object;
 
 /* ************************************************ */
 
-static struct OC_TestObject *testObj;
-static struct OC_TestObject *testObj2;
+static struct oc_test_object *testObj;
+static struct oc_test_object *testObj2;
 
 static int test_ctor(void)
 {
@@ -76,23 +76,23 @@ static int test_ctor(void)
     int var = 1234;
 
     testObj = NULL;
-    testObj = oc_new(OC_TestObject, var, text);
+    testObj = oc_new(oc_test_object, var, text);
 
     ASSERT(testObj != NULL);
-    ASSERT(malloc_usable_size(testObj) >= sizeof(struct OC_TestObject));
-    ASSERT(testObj->class == &_OC_TestObject);
+    ASSERT(malloc_usable_size(testObj) >= sizeof(struct oc_test_object));
+    ASSERT(testObj->class == &_oc_test_object);
     ASSERT(testObj->var == var);
     ASSERT(malloc_usable_size(testObj->text) >= strlen(text));
     ASSERT(strcmp(testObj->text,text) == 0);
 
     testObj2 = NULL;
-    testObj2 = oc_new(OC_TestObject, var, text);
+    testObj2 = oc_new(oc_test_object, var, text);
 
     ASSERT(testObj2 != testObj);
 
     ASSERT(testObj2 != NULL);
-    ASSERT(malloc_usable_size(testObj2) >= sizeof(struct OC_TestObject));
-    ASSERT(testObj2->class == &_OC_TestObject);
+    ASSERT(malloc_usable_size(testObj2) >= sizeof(struct oc_test_object));
+    ASSERT(testObj2->class == &_oc_test_object);
     ASSERT(testObj2->var == var);
     ASSERT(malloc_usable_size(testObj2->text) >= strlen(text));
     ASSERT(strcmp(testObj2->text,text) == 0);

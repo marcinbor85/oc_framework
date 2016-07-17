@@ -31,13 +31,13 @@ THE SOFTWARE.
 #include <stdarg.h>
 #include <string.h>
 
-#define OC_NEW_SUPER_CTOR(a,b,c) ((const struct OC_Class*)a)->ctor(b,c)
-#define OC_NEW_SUPER_DTOR(a,b) ((const struct OC_Class*)a)->dtor(b)
+#define OC_NEW_SUPER_CTOR(a,b,c) ((const struct oc_class*)a)->ctor(b,c)
+#define OC_NEW_SUPER_DTOR(a,b) ((const struct oc_class*)a)->dtor(b)
 
 #define OC_NEW_CLASS_EXTENDS(a) struct a super
 #define OC_NEW_CLASS const void *class
 
-struct OC_Class {
+struct oc_class {
     int size;
     void* (*ctor)(void *_self, va_list *_args);
     void* (*dtor)(void *_self);
