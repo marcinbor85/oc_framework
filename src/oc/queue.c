@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#include "oc_queue.h"
+#include "queue.h"
 
 int oc_queue_put(void *_self, void *_item)
 {

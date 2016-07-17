@@ -22,19 +22,31 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#ifndef OC_LIFO_H
-#define OC_LIFO_H
+#ifndef OC_QUEUE_H
+#define OC_QUEUE_H
 
-#include "oc_new.h"
+#include "object.h"
 
-#include "oc_queue.h"
-
-struct oc_lifo {
-    OC_NEW_CLASS_EXTENDS(oc_queue);
-    int last;
+struct oc_queue_vtable {
+    int (*put)(void*, void*);
+    int (*get)(void*, void*);
 };
 
-extern const void * oc_lifo;
+struct oc_queue {
+    OC_NEW_CLASS_EXTENDS(oc_object);
+    struct oc_queue_vtable *vtable;
+    void *data;
+    int buffer_size;
+    int item_size;
+    int count;
+};
 
-#endif /* OC_LIFO_H */
+int oc_queue_put(void *_self, void *_item);
+int oc_queue_get(void *_self, void *_item);
+int oc_queue_is_empty(void *_self);
+int oc_queue_is_full(void *_self);
+
+extern const void * oc_queue;
+
+#endif /* OC_QUEUE_H */
 

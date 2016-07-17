@@ -22,44 +22,30 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#include "tests.h"
+#ifndef OC_OBJECT_H
+#define OC_OBJECT_H
 
-int tests_run = 0;
+#include "new.h"
 
-extern int test_oc_new_all_tests(void);
-extern int test_oc_new_singleton_all_tests(void);
-extern int test_oc_new_inherit_all_tests(void);
-extern int test_oc_new_vtable_all_tests(void);
+struct oc_object_vtable {
+    char* (*to_string)(void*);
+    int (*lock)(void*);
+    int (*unlock)(void*);
+    int (*is_locked)(void*);
+};
 
-extern int test_oc_object_all_tests(void);
-extern int test_oc_queue_all_tests(void);
-extern int test_oc_fifo_all_tests(void);
-extern int test_oc_lifo_all_tests(void);
+struct oc_object {
+    OC_NEW_CLASS;
+    struct oc_object_vtable *vtable;
+    int locked;
+};
 
-static int all_tests(void)
-{
-    INCLUDE(test_oc_new_all_tests);
-    INCLUDE(test_oc_new_singleton_all_tests);
-    INCLUDE(test_oc_new_inherit_all_tests);
-    INCLUDE(test_oc_new_vtable_all_tests);
+char* oc_object_to_string(void *_self);
+int oc_object_lock(void *_self);
+int oc_object_unlock(void *_self);
+int oc_object_is_locked(void *_self);
 
-    INCLUDE(test_oc_object_all_tests);
-    INCLUDE(test_oc_queue_all_tests);
-    INCLUDE(test_oc_fifo_all_tests);
-    INCLUDE(test_oc_lifo_all_tests);
+extern const void * oc_object;
 
-    return 0;
-}
-
-int main(int argc, char **argv)
-{
-    int result = all_tests();
-    if (result == 0) {
-        printf("PASSED\n");
-    }
-    printf("Tests run: %d\n", tests_run);
-
-    return result != 0;
-}
-
+#endif /* OC_OBJECT_H */
 

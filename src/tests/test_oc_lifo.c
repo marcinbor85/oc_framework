@@ -24,7 +24,7 @@ THE SOFTWARE.
 
 #include "tests.h"
 
-#include "../oc/oc_lifo.h"
+#include <oc/lifo.h>
 
 static struct oc_lifo *testObj;
 

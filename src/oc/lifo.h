@@ -22,30 +22,17 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#ifndef OC_OBJECT_H
-#define OC_OBJECT_H
+#ifndef OC_LIFO_H
+#define OC_LIFO_H
 
-#include "oc_new.h"
+#include "queue.h"
 
-struct oc_object_vtable {
-    char* (*to_string)(void*);
-    int (*lock)(void*);
-    int (*unlock)(void*);
-    int (*is_locked)(void*);
+struct oc_lifo {
+    OC_NEW_CLASS_EXTENDS(oc_queue);
+    int last;
 };
 
-struct oc_object {
-    OC_NEW_CLASS;
-    struct oc_object_vtable *vtable;
-    int locked;
-};
+extern const void * oc_lifo;
 
-char* oc_object_to_string(void *_self);
-int oc_object_lock(void *_self);
-int oc_object_unlock(void *_self);
-int oc_object_is_locked(void *_self);
-
-extern const void * oc_object;
-
-#endif /* OC_OBJECT_H */
+#endif /* OC_LIFO_H */
 

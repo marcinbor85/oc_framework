@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#include "oc_fifo.h"
+#include "fifo.h"
 
 static int put(void *_self, void *_item)
 {

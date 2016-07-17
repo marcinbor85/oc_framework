@@ -20,6 +20,38 @@ The main assumptions of this library:
 - portability (embedded systems)
 - easy to understand and to modification
 
+Simple example:
+```
+#include <oc/fifo.h>
+
+#include <stdio.h>
+
+int main(void)
+{
+    // pointer to generic queue object
+    struct oc_queue *queue;
+    // auxiliary integer variable 
+    int i;
+
+    // create fifo queue object - fifo inherits from generic queue
+    // there are space for 4 items, each of them has sizeof(int) size
+    queue = oc_new(oc_fifo, 4, sizeof(int));
+
+    // put 8 items to the queue
+    // there should be buffer overrun, and some first items will be drop
+    for (i = 0; i < 8; i++) oc_queue_put(queue, &i);
+
+    // iterate over queue items, until queue will be empty
+    // should be out 4 5 6 7
+    while (oc_queue_get(queue, &i) != 0) printf("%d ", i);
+
+    // delete created queue object
+    oc_delete(queue);
+
+    return 0;
+}
+```
+
 Compile library (liboc.a) and run tests:
 
 ```sh

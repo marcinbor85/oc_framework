@@ -6,4 +6,4 @@ AM_INIT_AUTOMAKE
 AC_PROG_CC
 AC_PROG_RANLIB
 
-AC_OUTPUT(Makefile src/oc/Makefile src/tests/Makefile)
+AC_OUTPUT(Makefile src/oc/Makefile src/tests/Makefile src/examples/Makefile)

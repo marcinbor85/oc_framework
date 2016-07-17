@@ -24,7 +24,7 @@ THE SOFTWARE.
 
 #include "tests.h"
 
-#include "../oc/oc_new.h"
+#include <oc/new.h>
 
 /* ************************************************ */
 

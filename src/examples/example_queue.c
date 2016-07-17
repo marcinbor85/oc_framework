@@ -22,33 +22,32 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#ifndef OC_QUEUE_H
-#define OC_QUEUE_H
+#include <oc/fifo.h>
 
-#include "oc_new.h"
+#include <stdio.h>
 
-#include "oc_object.h"
+int main(void)
+{
+    // pointer to generic queue object
+    struct oc_queue *queue;
+    // auxiliary integer variable 
+    int i;
 
-struct oc_queue_vtable {
-    int (*put)(void*, void*);
-    int (*get)(void*, void*);
-};
+    // create fifo queue object - fifo inherits from generic queue
+    // there are space for 4 items, each of them has sizeof(int) size
+    queue = oc_new(oc_fifo, 4, sizeof(int));
 
-struct oc_queue {
-    OC_NEW_CLASS_EXTENDS(oc_object);
-    struct oc_queue_vtable *vtable;
-    void *data;
-    int buffer_size;
-    int item_size;
-    int count;
-};
+    // put 8 items to the queue
+    // there should be buffer overrun, and some first items will be drop
+    for (i = 0; i < 8; i++) oc_queue_put(queue, &i);
 
-int oc_queue_put(void *_self, void *_item);
-int oc_queue_get(void *_self, void *_item);
-int oc_queue_is_empty(void *_self);
-int oc_queue_is_full(void *_self);
+    // iterate over queue items, until queue will be empty
+    // should be out 4 5 6 7
+    while (oc_queue_get(queue, &i) != 0) printf("%d ", i);
 
-extern const void * oc_queue;
+    // delete created queue object
+    oc_delete(queue);
 
-#endif /* OC_QUEUE_H */
+    return 0;
+}
 

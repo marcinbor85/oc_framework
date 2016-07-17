@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#include "oc_object.h"
+#include "object.h"
 
 char* oc_object_to_string(void *_self)
 {

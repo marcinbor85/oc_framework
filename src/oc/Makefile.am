@@ -1,3 +1,4 @@
 noinst_LIBRARIES = liboc.a
-liboc_a_SOURCES = oc_new.c oc_new.h oc_object.c oc_object.h oc_queue.c oc_queue.h oc_fifo.c oc_fifo.h oc_lifo.c oc_lifo.h
+liboc_a_SOURCES = new.c object.c queue.c fifo.c lifo.c
+include_HEADERS = new.h object.h queue.h fifo.h lifo.h
 

@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#include "oc_new.h"
+#include "new.h"
 
 void* oc_new(const void *_class, ...)
 {

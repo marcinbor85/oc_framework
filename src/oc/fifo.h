@@ -25,9 +25,7 @@ THE SOFTWARE.
 #ifndef OC_FIFO_H
 #define OC_FIFO_H
 
-#include "oc_new.h"
-
-#include "oc_queue.h"
+#include "queue.h"
 
 struct oc_fifo {
     OC_NEW_CLASS_EXTENDS(oc_queue);
