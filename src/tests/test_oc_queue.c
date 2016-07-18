@@ -125,10 +125,12 @@ static int test_queue(void)
     testObj->super.count = 1;
     ASSERT(oc_queue_is_empty(testObj) == 0);
     ASSERT(oc_queue_is_full(testObj) == 0);
+    ASSERT(oc_queue_get_count(testObj) == 1);
 
     testObj->super.count = 4;
     ASSERT(oc_queue_is_empty(testObj) == 0);
     ASSERT(oc_queue_is_full(testObj) != 0);
+    ASSERT(oc_queue_get_count(testObj) == 4);
 
     testObj->super.vtable = NULL;
 

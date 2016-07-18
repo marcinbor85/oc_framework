@@ -56,6 +56,12 @@ int oc_queue_is_full(void *_self)
     return (self->count == self->buffer_size) ? 1 : 0;
 }
 
+int oc_queue_get_count(void *_self)
+{
+    struct oc_queue *self = _self;
+    return self->count;
+}
+
 static void *ctor(void *_self, va_list *_args)
 {
     struct oc_queue *self = OC_NEW_SUPER_CTOR(oc_object, _self, _args);

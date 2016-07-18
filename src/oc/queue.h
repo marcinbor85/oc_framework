@@ -45,6 +45,7 @@ int oc_queue_put(void *_self, void *_item);
 int oc_queue_get(void *_self, void *_item);
 int oc_queue_is_empty(void *_self);
 int oc_queue_is_full(void *_self);
+int oc_queue_get_count(void *_self);
 
 extern const void * oc_queue;
 
