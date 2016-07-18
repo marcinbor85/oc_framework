@@ -24,46 +24,47 @@ THE SOFTWARE.
 
 #include "tests.h"
 
-int tests_run = 0;
+#include <oc/chardev.h>
 
-extern int test_oc_new_all_tests(void);
-extern int test_oc_new_singleton_all_tests(void);
-extern int test_oc_new_inherit_all_tests(void);
-extern int test_oc_new_vtable_all_tests(void);
+static struct oc_chardev *testDev;
 
-extern int test_oc_object_all_tests(void);
-extern int test_oc_queue_all_tests(void);
-extern int test_oc_fifo_all_tests(void);
-extern int test_oc_lifo_all_tests(void);
-extern int test_oc_list_all_tests(void);
-extern int test_oc_chardev_all_tests(void);
-
-static int all_tests(void)
+static int test_start(void)
 {
-    INCLUDE(test_oc_new_all_tests);
-    INCLUDE(test_oc_new_singleton_all_tests);
-    INCLUDE(test_oc_new_inherit_all_tests);
-    INCLUDE(test_oc_new_vtable_all_tests);
+    testDev = NULL;
+    testDev = oc_new(oc_chardev);
 
-    INCLUDE(test_oc_object_all_tests);
-    INCLUDE(test_oc_queue_all_tests);
-    INCLUDE(test_oc_fifo_all_tests);
-    INCLUDE(test_oc_lifo_all_tests);
-    INCLUDE(test_oc_list_all_tests);
-    INCLUDE(test_oc_chardev_all_tests);
+    ASSERT(testDev != NULL);
 
     return 0;
 }
 
-int main(int argc, char **argv)
+static int test_method(void)
 {
-    int result = all_tests();
-    if (result == 0) {
-        printf("PASSED\n");
-    }
-    printf("Tests run: %d\n", tests_run);
+    char *text;
+    int s;
 
-    return result != 0;
+    text = oc_object_to_string(testDev);
+    ASSERT(strcmp(text, "oc_chardev") == 0);
+    free(text);
+
+    return 0;
 }
 
+static int test_stop(void)
+{
+    ASSERT(testDev != NULL);
+    oc_delete(testDev);
+    ASSERT(testDev == NULL);
+
+    return 0;
+}
+
+int test_oc_chardev_all_tests(void)
+{
+    VERIFY(test_start);
+    VERIFY(test_method);
+    VERIFY(test_stop);
+
+    return 0;
+}
 
