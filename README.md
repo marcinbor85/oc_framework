@@ -1,5 +1,6 @@
 # oc_framework
 Simple Object-Oriented framework for C programming language.
+For documentation and more details see headers file of library source code.
 
 ## Main features
 - classes
@@ -11,6 +12,7 @@ Simple Object-Oriented framework for C programming language.
 - singleton pattern
 - TDD tests
 - build-in some useful classes
+- examples
 
 ## The main assumptions of this library
 - lightweight
@@ -20,16 +22,18 @@ Simple Object-Oriented framework for C programming language.
 - easy to understand and to modification
 
 ## TODO:
-- [ ] add generic list object
+- [x] add generic list object
 - [ ] add generic io stream object
-- [ ] add some examples
+- [ ] add some extra examples
 - [ ] add source code documentation
 - [ ] portability improvements
 
-##Simple example:
+# Examples
+A few lines of source code means more than huge and fat documentation...
+
+### Simple queue object example:
 ```c
 #include <oc/fifo.h>
-
 #include <stdio.h>
 
 int main(void)
@@ -48,11 +52,62 @@ int main(void)
     for (i = 0; i < 8; i++) oc_queue_put(queue, &i);
 
     // iterate over queue items, until queue will be empty
-    // should be out 4 5 6 7
+    // should be out: 4 5 6 7
     while (oc_queue_get(queue, &i) != 0) printf("%d ", i);
 
     // delete created queue object
     oc_delete(queue);
+
+    return 0;
+}
+```
+
+### Simple list object example:
+```c
+#include <oc/list.h>
+#include <stdio.h>
+
+static int iterator(void *_list, void *_item, void *_param)
+{
+    // pointer to passed parameter (in this case format string)
+    const char *format = _param;
+    // pointer to list item
+    struct oc_list_item *item = _item;
+    // pointer to list item data (in this case variable)
+    int var = *(int*)item->data;
+
+    // print data using passed parameters and list data
+    printf(format, var);
+
+    // continue iterate
+    return 1;
+}
+
+int main(void)
+{
+    // pointer to generic list object
+    struct oc_list *list;
+    // pointers to generic list item objects
+    struct oc_list_item *item1,*item2;
+    // auxiliary integer variables 
+    int i = 1;
+    int j = 2;
+
+    // create list object
+    list = oc_new(oc_list);
+
+    // add two items to the front of the list, with pointers to variables
+    oc_list_add_front(list, item1 = oc_new(oc_list_item, &i));
+    oc_list_add_front(list, item2 = oc_new(oc_list_item, &j));
+
+    // iterate over list, with passing parameter
+    // should be out: [2] [1]
+    oc_list_iterate(list, iterator, "[%d] ");
+
+    // delete created list and list items object
+    oc_delete(list);
+    oc_delete(item1);
+    oc_delete(item2);
 
     return 0;
 }
@@ -73,8 +128,8 @@ make
 
 ## Output example:
 
-```sh
+```
 PASSED
-Tests run: 24
+Tests run: 27
 ```
 

@@ -22,46 +22,34 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#include "tests.h"
+#ifndef OC_LIST_H
+#define OC_LIST_H
 
-int tests_run = 0;
+#include "object.h"
 
-extern int test_oc_new_all_tests(void);
-extern int test_oc_new_singleton_all_tests(void);
-extern int test_oc_new_inherit_all_tests(void);
-extern int test_oc_new_vtable_all_tests(void);
+struct oc_list {
+    OC_NEW_CLASS_EXTENDS(oc_object);
+    void *first;
+    int count;
+};
 
-extern int test_oc_object_all_tests(void);
-extern int test_oc_queue_all_tests(void);
-extern int test_oc_fifo_all_tests(void);
-extern int test_oc_lifo_all_tests(void);
-extern int test_oc_list_all_tests(void);
+struct oc_list_item {
+    OC_NEW_CLASS_EXTENDS(oc_object);
+    void *next;
+    void *data;
+};
 
-static int all_tests(void)
-{
-    INCLUDE(test_oc_new_all_tests);
-    INCLUDE(test_oc_new_singleton_all_tests);
-    INCLUDE(test_oc_new_inherit_all_tests);
-    INCLUDE(test_oc_new_vtable_all_tests);
+int oc_list_add_front(void *_self, void *_item);
+int oc_list_add_back(void *_self, void *_item);
+int oc_list_remove(void *_self, void *_item);
+int oc_list_is_empty(void *_self);
+int oc_list_clear(void *_self);
+int oc_list_get_count(void *_self);
+int oc_list_has_item(void *_self, void *_item);
+int oc_list_iterate(void *_self, int (*_callback)(void *_self, void *_item, void *_param), void *_param);
 
-    INCLUDE(test_oc_object_all_tests);
-    INCLUDE(test_oc_queue_all_tests);
-    INCLUDE(test_oc_fifo_all_tests);
-    INCLUDE(test_oc_lifo_all_tests);
-    INCLUDE(test_oc_list_all_tests);
+extern const void * oc_list;
+extern const void * oc_list_item;
 
-    return 0;
-}
-
-int main(int argc, char **argv)
-{
-    int result = all_tests();
-    if (result == 0) {
-        printf("PASSED\n");
-    }
-    printf("Tests run: %d\n", tests_run);
-
-    return result != 0;
-}
-
+#endif /* OC_LIST_H */
 
