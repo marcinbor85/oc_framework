@@ -27,7 +27,7 @@ THE SOFTWARE.
 int oc_list_add_front(void *_self, void *_item)
 {
     struct oc_list *self = _self;
-    struct oc_list_item *item = _item;
+    struct oc_listitem *item = _item;
 
     if (oc_list_has_item(self,item) != 0) return 0;
 
@@ -40,8 +40,8 @@ int oc_list_add_front(void *_self, void *_item)
 int oc_list_add_back(void *_self, void *_item)
 {
     struct oc_list *self = _self;
-    struct oc_list_item *item = _item;
-    struct oc_list_item *i = self->first;
+    struct oc_listitem *item = _item;
+    struct oc_listitem *i = self->first;
 
     if (oc_list_has_item(self,item) != 0) return 0;
 
@@ -59,9 +59,9 @@ int oc_list_add_back(void *_self, void *_item)
 int oc_list_remove(void *_self, void *_item)
 {
     struct oc_list *self = _self;
-    struct oc_list_item *item = _item;
-    struct oc_list_item *i = self->first;
-    struct oc_list_item *prev;
+    struct oc_listitem *item = _item;
+    struct oc_listitem *i = self->first;
+    struct oc_listitem *prev;
 
     if (self->first == NULL) return 0;
     
@@ -99,7 +99,7 @@ int oc_list_get_count(void *_self)
 int oc_list_iterate(void *_self, int (*_callback)(void *_self, void *_item, void *_param), void *_param)
 {
     struct oc_list *self = _self;
-    struct oc_list_item *item;
+    struct oc_listitem *item;
 
     if (_callback == NULL) return 0;
     if (self->first == NULL) return 0;
@@ -116,8 +116,8 @@ int oc_list_iterate(void *_self, int (*_callback)(void *_self, void *_item, void
 int oc_list_has_item(void *_self, void *_item)
 {
     struct oc_list *self = _self;
-    struct oc_list_item *item = _item;
-    struct oc_list_item *i = self->first;
+    struct oc_listitem *item = _item;
+    struct oc_listitem *i = self->first;
     
     while (i != NULL) {
         if (i == _item) return 1;
@@ -129,8 +129,8 @@ int oc_list_has_item(void *_self, void *_item)
 int oc_list_clear(void *_self)
 {
     struct oc_list *self = _self;
-    struct oc_list_item *i = self->first;
-    struct oc_list_item *next;
+    struct oc_listitem *i = self->first;
+    struct oc_listitem *next;
 
     if (self->first == NULL) return 0;
     
@@ -166,7 +166,7 @@ const void * oc_list = &_oc_list;
 
 static void *item_ctor(void *_self, va_list *_args)
 {
-    struct oc_list_item *self = OC_NEW_SUPER_CTOR(oc_object, _self, _args);
+    struct oc_listitem *self = OC_NEW_SUPER_CTOR(oc_object, _self, _args);
     self->next = NULL;
     self->data = (void*)va_arg(*_args, void*);
     return self;
@@ -174,10 +174,10 @@ static void *item_ctor(void *_self, va_list *_args)
 
 static void *item_dtor(void *_self)
 {
-    struct oc_list_item *self = OC_NEW_SUPER_DTOR(oc_object, _self);
+    struct oc_listitem *self = OC_NEW_SUPER_DTOR(oc_object, _self);
     return self;
 }
 
-static const struct oc_class _oc_list_item = {sizeof(struct oc_list_item), "oc_list_item", item_ctor, item_dtor, NULL};
-const void * oc_list_item = &_oc_list_item;
+static const struct oc_class _oc_listitem = {sizeof(struct oc_listitem), "oc_listitem", item_ctor, item_dtor, NULL};
+const void * oc_listitem = &_oc_listitem;
 

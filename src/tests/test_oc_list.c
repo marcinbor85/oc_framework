@@ -27,9 +27,9 @@ THE SOFTWARE.
 #include <oc/list.h>
 
 static struct oc_list *testList;
-static struct oc_list_item *testItem1;
-static struct oc_list_item *testItem2;
-static struct oc_list_item *testItem3;
+static struct oc_listitem *testItem1;
+static struct oc_listitem *testItem2;
+static struct oc_listitem *testItem3;
 
 static int test_start(void)
 {
@@ -40,9 +40,9 @@ static int test_start(void)
     testList = NULL;
     testList = oc_new(oc_list);
 
-    testItem1 = oc_new(oc_list_item, &var1);
-    testItem2 = oc_new(oc_list_item, &var2);
-    testItem3 = oc_new(oc_list_item, &var3);
+    testItem1 = oc_new(oc_listitem, &var1);
+    testItem2 = oc_new(oc_listitem, &var2);
+    testItem3 = oc_new(oc_listitem, &var3);
 
     ASSERT(testList != NULL);
     ASSERT(testList->first == NULL);
@@ -69,7 +69,7 @@ static int cntr;
 static int test_list_iterate(void *_list, void *_item, void *_param)
 {
     struct oc_list *list = _list;
-    struct oc_list_item *item = _item;
+    struct oc_listitem *item = _item;
     int param = *(int*)_param;
     int v;
 
@@ -107,7 +107,7 @@ static int test_list(void)
     free(text);
 
     text = oc_object_to_string(testItem1);
-    ASSERT(strcmp(text, "oc_list_item") == 0);
+    ASSERT(strcmp(text, "oc_listitem") == 0);
     free(text);
 
     ASSERT(oc_list_is_empty(testList) != 0);

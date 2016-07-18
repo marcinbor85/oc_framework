@@ -33,7 +33,7 @@ struct oc_list {
     int count;
 };
 
-struct oc_list_item {
+struct oc_listitem {
     OC_NEW_CLASS_EXTENDS(oc_object);
     void *next;
     void *data;
@@ -49,7 +49,7 @@ int oc_list_has_item(void *_self, void *_item);
 int oc_list_iterate(void *_self, int (*_callback)(void *_self, void *_item, void *_param), void *_param);
 
 extern const void * oc_list;
-extern const void * oc_list_item;
+extern const void * oc_listitem;
 
 #endif /* OC_LIST_H */
 

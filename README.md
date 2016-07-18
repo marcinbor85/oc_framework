@@ -72,7 +72,7 @@ static int iterator(void *_list, void *_item, void *_param)
     // pointer to passed parameter (in this case format string)
     const char *format = _param;
     // pointer to list item
-    struct oc_list_item *item = _item;
+    struct oc_listitem *item = _item;
     // pointer to list item data (in this case variable)
     int var = *(int*)item->data;
 
@@ -88,7 +88,7 @@ int main(void)
     // pointer to generic list object
     struct oc_list *list;
     // pointers to generic list item objects
-    struct oc_list_item *item1,*item2;
+    struct oc_listitem *item1,*item2;
     // auxiliary integer variables 
     int i = 1;
     int j = 2;
@@ -97,8 +97,8 @@ int main(void)
     list = oc_new(oc_list);
 
     // add two items to the front of the list, with pointers to variables
-    oc_list_add_front(list, item1 = oc_new(oc_list_item, &i));
-    oc_list_add_front(list, item2 = oc_new(oc_list_item, &j));
+    oc_list_add_front(list, item1 = oc_new(oc_listitem, &i));
+    oc_list_add_front(list, item2 = oc_new(oc_listitem, &j));
 
     // iterate over list, with passing parameter
     // should be out: [2] [1]
