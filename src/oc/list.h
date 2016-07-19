@@ -30,17 +30,21 @@ THE SOFTWARE.
 struct oc_list {
     OC_NEW_CLASS_EXTENDS(oc_object);
     void *first;
+    void *last;
     int count;
 };
 
 struct oc_listitem {
     OC_NEW_CLASS_EXTENDS(oc_object);
+    void *prev;
     void *next;
+    void *list;
     void *data;
 };
 
-int oc_list_add_front(void *_self, void *_item);
-int oc_list_add_back(void *_self, void *_item);
+int oc_list_insert(void *_self, void *_item, const int _index);
+int oc_list_add_first(void *_self, void *_item);
+int oc_list_add_last(void *_self, void *_item);
 int oc_list_remove(void *_self, void *_item);
 int oc_list_is_empty(void *_self);
 int oc_list_clear(void *_self);

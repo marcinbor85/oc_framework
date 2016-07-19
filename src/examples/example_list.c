@@ -56,8 +56,8 @@ int main(void)
     list = oc_new(oc_list);
 
     // add two items to the front of the list, with pointers to variables
-    oc_list_add_front(list, item1 = oc_new(oc_listitem, &i));
-    oc_list_add_front(list, item2 = oc_new(oc_listitem, &j));
+    oc_list_add_first(list, item1 = oc_new(oc_listitem, &i));
+    oc_list_add_first(list, item2 = oc_new(oc_listitem, &j));
 
     // iterate over list, with passing parameter
     // should be out: [2] [1]

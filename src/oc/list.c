@@ -24,34 +24,81 @@ THE SOFTWARE.
 
 #include "list.h"
 
-int oc_list_add_front(void *_self, void *_item)
+int oc_list_insert(void *_self, void *_item, const int _index)
 {
     struct oc_list *self = _self;
     struct oc_listitem *item = _item;
+    struct oc_listitem *left;
+    struct oc_listitem *right;
+    int i;
 
-    if (oc_list_has_item(self,item) != 0) return 0;
+    if (self == NULL) return 0;
+    if (item == NULL) return 0;
+    if (item->list == self) return 0;
 
-    item->next = self->first;
-    self->first = item;
+    if (_index == 0) return oc_list_add_first(self, item);
+    if (_index >= self->count) return oc_list_add_last(self, item);
+
+    i = 0;
+    right = self->first;
+    while (i++ != _index) right = right->next;
+    left = right->prev;
+
+    left->next = item;
+    item->prev = left;
+    right->prev = item;
+    item->next = right;
+
+    item->list = self;
+
     self->count++;
     return 1;
 }
 
-int oc_list_add_back(void *_self, void *_item)
+int oc_list_add_first(void *_self, void *_item)
 {
     struct oc_list *self = _self;
     struct oc_listitem *item = _item;
-    struct oc_listitem *i = self->first;
 
-    if (oc_list_has_item(self,item) != 0) return 0;
+    if (self == NULL) return 0;
+    if (item == NULL) return 0;
+    if (item->list == self) return 0;
 
-    if (self->first == NULL) {
-        self->first = item;
-        item->next = NULL;
-    } else {
-        while (i->next != NULL) i = i->next;
-        i->next = item;
-    }
+    if (item->list != NULL) oc_list_remove(item->list, item);
+
+    if (self->first != NULL) ((struct oc_listitem *)(self->first))->prev = item;
+
+    item->next = self->first;
+    item->prev = NULL;
+    item->list = self;
+    self->first = item;
+
+    if (item->next == NULL) self->last = item;
+
+    self->count++;
+    return 1;
+}
+
+int oc_list_add_last(void *_self, void *_item)
+{
+    struct oc_list *self = _self;
+    struct oc_listitem *item = _item;
+
+    if (self == NULL) return 0;
+    if (item == NULL) return 0;
+    if (item->list == self) return 0;
+
+    if (item->list != NULL) oc_list_remove(item->list, item);
+
+    if (self->last != NULL) ((struct oc_listitem *)(self->last))->next = item;
+
+    item->prev = self->last;
+    item->next = NULL;
+    item->list = self;
+    self->last = item;
+
+    if (item->prev == NULL) self->first = item;
+
     self->count++;
     return 1;
 }
@@ -60,26 +107,22 @@ int oc_list_remove(void *_self, void *_item)
 {
     struct oc_list *self = _self;
     struct oc_listitem *item = _item;
-    struct oc_listitem *i = self->first;
-    struct oc_listitem *prev;
 
-    if (self->first == NULL) return 0;
-    
-    while (i != _item) {
-        prev = i;
-        i = i->next;
-        if (i == NULL) return 0;
-    }
+    if (self == NULL) return 0;
+    if (item == NULL) return 0;
+    if (item->list != self) return 0;
+    if (self->count == 0) return 0;
 
-    if (i == self->first) {
-        self->first = i->next;
-    } else {
-        prev->next = i->next;
-    }
+    if (self->first == item) self->first = item->next;
+    if (self->last == item) self->last = item->prev;
 
-    i->next = NULL;
+    if (item->next != NULL) ((struct oc_listitem *)(item->next))->prev = item->prev;
+    if (item->prev != NULL) ((struct oc_listitem *)(item->prev))->next = item->next;
 
-    
+    item->prev = NULL;
+    item->next = NULL;
+    item->list = NULL;
+
     self->count--;
     return 1;
 }
@@ -87,12 +130,14 @@ int oc_list_remove(void *_self, void *_item)
 int oc_list_is_empty(void *_self)
 {
     struct oc_list *self = _self;
-    return (self->first != NULL) ? 0 : 1;
+    if (self == NULL) return 1;
+    return (self->count == 0) ? 1 : 0;
 }
 
 int oc_list_get_count(void *_self)
 {
     struct oc_list *self = _self;
+    if (self == NULL) return 0;
     return self->count;
 }
 
@@ -101,8 +146,9 @@ int oc_list_iterate(void *_self, int (*_callback)(void *_self, void *_item, void
     struct oc_list *self = _self;
     struct oc_listitem *item;
 
+    if (self == NULL) return 0;
     if (_callback == NULL) return 0;
-    if (self->first == NULL) return 0;
+    if (self->count == 0) return 0;
 
     item = self->first;
     while (item != NULL) {
@@ -117,35 +163,35 @@ int oc_list_has_item(void *_self, void *_item)
 {
     struct oc_list *self = _self;
     struct oc_listitem *item = _item;
-    struct oc_listitem *i = self->first;
-    
-    while (i != NULL) {
-        if (i == _item) return 1;
-        i = i->next;
-    }
-    return 0;
+    if (self == NULL) return 0;
+    if (item == NULL) return 1;
+    return (item->list == self) ? 1 : 0;
 }
 
 int oc_list_clear(void *_self)
 {
     struct oc_list *self = _self;
-    struct oc_listitem *i = self->first;
+    struct oc_listitem *item;
     struct oc_listitem *next;
 
-    if (self->first == NULL) return 0;
+    if (self == NULL) return 0;
+    if (self->count == 0) return 0;
     
-    while (i != NULL) {
-        next = i->next;
-        i->next = NULL;
-        i = next;
+    item = self->first;
+    while (item != NULL) {
+        next = item->next;
+        item->next = NULL;
+        item->prev = NULL;
+        item->list = NULL;
+        item = next;
     }
 
     self->first = NULL;
+    self->last = NULL;
+    self->count = 0;
 
     return 1;
 }
-
-
 
 static void *list_ctor(void *_self, va_list *_args)
 {

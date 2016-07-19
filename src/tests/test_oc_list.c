@@ -46,18 +46,25 @@ static int test_start(void)
 
     ASSERT(testList != NULL);
     ASSERT(testList->first == NULL);
+    ASSERT(testList->last == NULL);
     ASSERT(testList->count == 0);
 
     ASSERT(testItem1 != NULL);
     ASSERT(testItem1->next == NULL);
+    ASSERT(testItem1->prev == NULL);
+    ASSERT(testItem1->list == NULL);
     ASSERT(testItem1->data == &var1);
 
     ASSERT(testItem2 != NULL);
     ASSERT(testItem2->next == NULL);
+    ASSERT(testItem2->prev == NULL);
+    ASSERT(testItem2->list == NULL);
     ASSERT(testItem2->data == &var2);
 
     ASSERT(testItem3 != NULL);
     ASSERT(testItem3->next == NULL);
+    ASSERT(testItem3->prev == NULL);
+    ASSERT(testItem3->list == NULL);
     ASSERT(testItem3->data == &var3);
 
     return 0;
@@ -113,19 +120,26 @@ static int test_list(void)
     ASSERT(oc_list_is_empty(testList) != 0);
     ASSERT(oc_list_get_count(testList) == 0);
 
-    ASSERT(oc_list_add_front(testList, testItem1) != 0);
+    ASSERT(oc_list_add_first(testList, testItem1) != 0);
     ASSERT(oc_list_is_empty(testList) == 0);
     ASSERT(oc_list_get_count(testList) == 1);
 
     ASSERT(testList->first == testItem1);
+    ASSERT(testList->last == testItem1);
     ASSERT(testItem1->next == NULL);
+    ASSERT(testItem1->prev == NULL);
+    ASSERT(testItem1->list == testList);
 
-    ASSERT(oc_list_add_front(testList, testItem2) != 0);
+    ASSERT(oc_list_add_first(testList, testItem2) != 0);
     ASSERT(oc_list_get_count(testList) == 2);
 
     ASSERT(testList->first == testItem2);
+    ASSERT(testList->last == testItem1);
     ASSERT(testItem2->next == testItem1);
+    ASSERT(testItem2->prev == NULL);
+    ASSERT(testItem2->list == testList);
     ASSERT(testItem1->next == NULL);
+    ASSERT(testItem1->prev == testItem2);
 
     ASSERT(oc_list_remove(testList, testItem3) == 0);
 
@@ -134,58 +148,79 @@ static int test_list(void)
 
     ASSERT(oc_list_remove(testList, testItem2) != 0);
     ASSERT(testList->first == testItem1);
+    ASSERT(testList->last == testItem1);
     ASSERT(testItem1->next == NULL);
+    ASSERT(testItem1->prev == NULL);
+    ASSERT(testItem1->list == testList);
     ASSERT(testItem2->next == NULL);
+    ASSERT(testItem2->prev == NULL);
+    ASSERT(testItem2->list == NULL);
 
     ASSERT(oc_list_is_empty(testList) == 0);
     ASSERT(oc_list_get_count(testList) == 1);
 
     ASSERT(oc_list_remove(testList, testItem1) != 0);
     ASSERT(testList->first == NULL);
+    ASSERT(testList->last == NULL);
     ASSERT(testItem1->next == NULL);
+    ASSERT(testItem1->prev == NULL);
+    ASSERT(testItem1->list == NULL);
 
     ASSERT(oc_list_is_empty(testList) != 0);
     ASSERT(oc_list_get_count(testList) == 0);
 
-    ASSERT(oc_list_add_front(testList, testItem1) != 0);
+    ASSERT(oc_list_add_first(testList, testItem1) != 0);
     ASSERT(oc_list_get_count(testList) == 1);
 
     ASSERT(testList->first == testItem1);
+    ASSERT(testList->last == testItem1);
     ASSERT(testItem1->next == NULL);
+    ASSERT(testItem1->prev == NULL);
+    ASSERT(testItem1->list == testList);
 
-    ASSERT(oc_list_add_back(testList, testItem2) != 0);
+    ASSERT(oc_list_add_last(testList, testItem2) != 0);
     ASSERT(oc_list_get_count(testList) == 2);
 
     ASSERT(testList->first == testItem1);
+    ASSERT(testList->last == testItem2);
     ASSERT(testItem1->next == testItem2);
+    ASSERT(testItem1->prev == NULL);
     ASSERT(testItem2->next == NULL);
+    ASSERT(testItem2->prev == testItem1);
+    ASSERT(testItem1->list == testList);
+    ASSERT(testItem2->list == testList);
 
     ASSERT(oc_list_has_item(testList, testItem3) == 0);
     ASSERT(oc_list_has_item(testList, testItem2) != 0);
     ASSERT(oc_list_has_item(testList, testItem1) != 0);
 
-    ASSERT(oc_list_add_back(testList, testItem3) != 0);
+    ASSERT(oc_list_add_last(testList, testItem3) != 0);
     ASSERT(oc_list_get_count(testList) == 3);
     ASSERT(testItem2->next == testItem3);
+    ASSERT(testItem3->prev == testItem2);
     ASSERT(testItem3->next == NULL);
+    ASSERT(testList->last == testItem3);
     ASSERT(oc_list_has_item(testList, testItem3) != 0);
 
-    ASSERT(oc_list_add_back(testList, testItem3) == 0);
+    ASSERT(oc_list_add_last(testList, testItem3) == 0);
     ASSERT(oc_list_get_count(testList) == 3);
 
-    ASSERT(oc_list_add_front(testList, testItem3) == 0);
+    ASSERT(oc_list_add_first(testList, testItem3) == 0);
     ASSERT(oc_list_get_count(testList) == 3);
 
     ASSERT(oc_list_remove(testList, testItem2) != 0);
     ASSERT(oc_list_get_count(testList) == 2);
     ASSERT(testList->first == testItem1);
+    ASSERT(testList->last == testItem3);
     ASSERT(testItem1->next == testItem3);
-    ASSERT(testItem2->next == NULL);
+    ASSERT(testItem3->prev == testItem1);
+    ASSERT(testItem1->prev == NULL);
+    ASSERT(testItem3->next == NULL);
 
     ASSERT(oc_list_remove(testList, testItem2) == 0);
     ASSERT(oc_list_get_count(testList) == 2);
 
-    ASSERT(oc_list_add_back(testList, testItem2) != 0);
+    ASSERT(oc_list_add_last(testList, testItem2) != 0);
     ASSERT(oc_list_get_count(testList) == 3);
 
     sum = 0;
@@ -206,11 +241,60 @@ static int test_list(void)
 
     ASSERT(oc_list_clear(testList) != 0);
     ASSERT(testList->first == NULL);
+    ASSERT(testList->last == NULL);
+    ASSERT(testList->count == 0);
+
     ASSERT(testItem1->next == NULL);
     ASSERT(testItem2->next == NULL);
     ASSERT(testItem3->next == NULL);
+    ASSERT(testItem1->prev == NULL);
+    ASSERT(testItem2->prev == NULL);
+    ASSERT(testItem3->prev == NULL);
+    ASSERT(testItem1->list == NULL);
+    ASSERT(testItem2->list == NULL);
+    ASSERT(testItem3->list == NULL);
 
     ASSERT(oc_list_clear(testList) == 0);
+
+    ASSERT(oc_list_insert(testList, testItem1, 0) != 0);
+    ASSERT(oc_list_is_empty(testList) == 0);
+    ASSERT(oc_list_get_count(testList) == 1);
+
+    ASSERT(testList->first == testItem1);
+    ASSERT(testList->last == testItem1);
+    ASSERT(testItem1->next == NULL);
+    ASSERT(testItem1->prev == NULL);
+    ASSERT(testItem1->list == testList);
+
+    ASSERT(oc_list_insert(testList, testItem2, 1) != 0);
+    ASSERT(oc_list_is_empty(testList) == 0);
+    ASSERT(oc_list_get_count(testList) == 2);
+
+    ASSERT(testList->first == testItem1);
+    ASSERT(testList->last == testItem2);
+    ASSERT(testItem1->next == testItem2);
+    ASSERT(testItem1->prev == NULL);
+    ASSERT(testItem2->next == NULL);
+    ASSERT(testItem2->prev == testItem1);
+    ASSERT(testItem2->list == testList);
+
+    ASSERT(oc_list_insert(testList, testItem3, 1) != 0);
+    ASSERT(oc_list_is_empty(testList) == 0);
+    ASSERT(oc_list_get_count(testList) == 3);
+
+    ASSERT(testList->first == testItem1);
+    ASSERT(testList->last == testItem2);
+    ASSERT(testItem1->next == testItem3);
+    ASSERT(testItem1->prev == NULL);
+    ASSERT(testItem2->next == NULL);
+    ASSERT(testItem2->prev == testItem3);
+    ASSERT(testItem3->next == testItem2);
+    ASSERT(testItem3->prev == testItem1);
+    ASSERT(testItem3->list == testList);
+
+    ASSERT(oc_list_insert(testList, testItem3, 0) == 0);
+    ASSERT(oc_list_is_empty(testList) == 0);
+    ASSERT(oc_list_get_count(testList) == 3);
 
     return 0;
 }
