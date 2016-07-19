@@ -27,22 +27,39 @@ THE SOFTWARE.
 int oc_chardev_put_char(void *_self, const char *_char)
 {
     struct oc_chardev *self = _self;
+
     if (self == NULL) return 0;
-    return 0;
+    if (_char == NULL) return 0;
+
+    return oc_queue_put(self->output, _char);
 }
 
 int oc_chardev_get_char(void *_self, const char *_char)
 {
     struct oc_chardev *self = _self;
+
     if (self == NULL) return 0;
-    return 0;
+    if (_char == NULL) return 0;
+
+    return oc_queue_get(self->input, _char);
 }
 
 int oc_chardev_push_out(void *_self)
 {
     struct oc_chardev *self = _self;
+    int i;
+    char ch;
+
     if (self == NULL) return 0;
-    return 0;
+    if (self->vtable == NULL) return 0;
+    if (self->vtable->put_char == NULL) return 0;
+
+    i=0;
+    while (oc_queue_get(self->output, &ch) != 0) {
+        if (self->vtable->put_char(self, &ch) != 0) i++;
+    }
+
+    return i;
 }
 
 int oc_chardev_pull_in(void *_self)
