@@ -2,7 +2,7 @@
 Simple Object-Oriented framework for C programming language.
 For documentation and more details see headers file of library source code.
 
-## Main features
+### Main features
 - classes
 - single inheritance
 - virtual table pointer
@@ -14,19 +14,20 @@ For documentation and more details see headers file of library source code.
 - build-in some useful classes
 - examples
 
-## The main assumptions of this library
+### Main goals
 - lightweight
 - educational aspects
 - code readability
 - portability (embedded systems)
 - easy to understand and to modification
 
-## TODO:
+### TODO:
 - [x] add generic list object
-- [ ] add generic io stream object
+- [x] add generic chardev object
 - [ ] add some extra examples
 - [ ] add source code documentation
 - [ ] portability improvements
+- [ ] security improvements
 
 # Examples
 A few lines of source code means more than huge and fat documentation...
@@ -113,7 +114,7 @@ int main(void)
 }
 ```
 
-## Compile library (liboc.a) and run tests:
+### Compile library (liboc.a) and run tests:
 
 ```sh
 mkdir build
@@ -126,7 +127,7 @@ make
 ./src/tests/tests
 ```
 
-## Output example:
+### Output example:
 
 ```
 PASSED
