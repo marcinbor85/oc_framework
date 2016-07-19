@@ -72,6 +72,7 @@ int oc_queue_get_count(void *_self)
 static void *ctor(void *_self, va_list *_args)
 {
     struct oc_queue *self = OC_NEW_SUPER_CTOR(oc_object, _self, _args);
+    self->vtable = NULL;
     self->buffer_size = (int)va_arg(*_args, int);
     self->item_size = (int)va_arg(*_args, int);
     self->data = calloc(self->buffer_size, self->item_size);

@@ -24,60 +24,72 @@ THE SOFTWARE.
 
 #include "chardev.h"
 
-int oc_chardev_put_char(void *_self, const char *_char)
+int oc_chardev_put_char(void *_self, char *_char)
+{
+    struct oc_chardev *self = _self;
+    int stat;
+
+    if (self == NULL) return 0;
+    if (_char == NULL) return 0;
+
+    stat = oc_queue_put(self->output, _char);
+
+    if (self->vtable == NULL) return stat;
+    if (self->vtable->put_callback == NULL) return stat;
+
+    return self->vtable->put_callback(self, stat);
+}
+
+int oc_chardev_get_char(void *_self, char *_char)
+{
+    struct oc_chardev *self = _self;
+    int stat;
+
+    if (self == NULL) return 0;
+    if (_char == NULL) return 0;
+
+    stat = oc_queue_get(self->input, _char);
+
+    if (self->vtable == NULL) return stat;
+    if (self->vtable->get_callback == NULL) return stat;
+
+    return self->vtable->get_callback(self, stat);
+}
+
+int oc_chardev_pull_output(void *_self, char *_char)
 {
     struct oc_chardev *self = _self;
 
     if (self == NULL) return 0;
     if (_char == NULL) return 0;
 
-    return oc_queue_put(self->output, _char);
+    return oc_queue_get(self->output, _char);
 }
 
-int oc_chardev_get_char(void *_self, const char *_char)
+int oc_chardev_push_input(void *_self, char *_char)
 {
     struct oc_chardev *self = _self;
 
     if (self == NULL) return 0;
     if (_char == NULL) return 0;
 
-    return oc_queue_get(self->input, _char);
-}
-
-int oc_chardev_push_out(void *_self)
-{
-    struct oc_chardev *self = _self;
-    int i;
-    char ch;
-
-    if (self == NULL) return 0;
-    if (self->vtable == NULL) return 0;
-    if (self->vtable->put_char == NULL) return 0;
-
-    i=0;
-    while (oc_queue_get(self->output, &ch) != 0) {
-        if (self->vtable->put_char(self, &ch) != 0) i++;
-    }
-
-    return i;
-}
-
-int oc_chardev_pull_in(void *_self)
-{
-    struct oc_chardev *self = _self;
-    if (self == NULL) return 0;
-    return 0;
+    return oc_queue_put(self->input, _char);
 }
 
 static void *ctor(void *_self, va_list *_args)
 {
     struct oc_chardev *self = OC_NEW_SUPER_CTOR(oc_object, _self, _args);
+    self->vtable = NULL;
+    self->input = oc_new(oc_fifo, (int)va_arg(*_args, int), 1);
+    self->output = oc_new(oc_fifo, (int)va_arg(*_args, int), 1);
     return self;
 }
 
 static void *dtor(void *_self)
 {
     struct oc_chardev *self = OC_NEW_SUPER_DTOR(oc_object, _self);
+    oc_delete(self->input);
+    oc_delete(self->output);
     return self;
 }
 

@@ -28,10 +28,10 @@ THE SOFTWARE.
 #include "new.h"
 
 struct oc_object_vtable {
-    char* (*to_string)(void*);
-    int (*lock)(void*);
-    int (*unlock)(void*);
-    int (*is_locked)(void*);
+    char* (*to_string)(void *_self);
+    int (*lock)(void *_self);
+    int (*unlock)(void *_self);
+    int (*is_locked)(void *_self);
 };
 
 struct oc_object {

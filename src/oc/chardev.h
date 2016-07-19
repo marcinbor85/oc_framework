@@ -29,20 +29,21 @@ THE SOFTWARE.
 #include "fifo.h"
 
 struct oc_chardev_vtable {
-    int (*put_char)(void *, char *);
-    int (*get_char)(void *, char *);
+    int (*put_callback)(void *_self, int _stat);
+    int (*get_callback)(void *_self, int _stat);
 };
 
 struct oc_chardev {
     OC_NEW_CLASS_EXTENDS(oc_object);
+    struct oc_chardev_vtable *vtable;
     struct oc_queue *input;
     struct oc_queue *output;
 };
 
-int oc_chardev_put_char(void *_self, const char *_char);
-int oc_chardev_get_char(void *_self, const char *_char);
-int oc_chardev_push_out(void *_self);
-int oc_chardev_pull_in(void *_self);
+int oc_chardev_put_char(void *_self, char *_char);
+int oc_chardev_get_char(void *_self, char *_char);
+int oc_chardev_pull_output(void *_self, char *_char);
+int oc_chardev_push_input(void *_self, char *_char);
 
 extern const void * oc_chardev;
 
