@@ -28,6 +28,8 @@ int oc_queue_put(void *_self, void *_item)
 {
     struct oc_queue *self = _self;
 
+    if (self == NULL) return 0;
+    if (_item == NULL) return 0;
     if (self->vtable == NULL) return 0;
     if (self->vtable->put == NULL) return 0;
 
@@ -38,6 +40,8 @@ int oc_queue_get(void *_self, void *_item)
 {
     struct oc_queue *self = _self;
 
+    if (self == NULL) return 0;
+    if (_item == NULL) return 0;
     if (self->vtable == NULL) return 0;
     if (self->vtable->get == NULL) return 0;
 
@@ -47,24 +51,28 @@ int oc_queue_get(void *_self, void *_item)
 int oc_queue_is_empty(void *_self)
 {
     struct oc_queue *self = _self;
+    if (self == NULL) return 0;
     return (self->count == 0) ? 1 : 0;
 }
 
 int oc_queue_is_full(void *_self)
 {
     struct oc_queue *self = _self;
+    if (self == NULL) return 0;
     return (self->count == self->buffer_size) ? 1 : 0;
 }
 
 int oc_queue_get_count(void *_self)
 {
     struct oc_queue *self = _self;
+    if (self == NULL) return 0;
     return self->count;
 }
 
 static void *ctor(void *_self, va_list *_args)
 {
     struct oc_queue *self = OC_NEW_SUPER_CTOR(oc_object, _self, _args);
+    self->vtable = NULL;
     self->buffer_size = (int)va_arg(*_args, int);
     self->item_size = (int)va_arg(*_args, int);
     self->data = calloc(self->buffer_size, self->item_size);

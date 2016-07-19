@@ -28,8 +28,8 @@ THE SOFTWARE.
 #include "object.h"
 
 struct oc_queue_vtable {
-    int (*put)(void*, void*);
-    int (*get)(void*, void*);
+    int (*put)(void *_self, void *_item);
+    int (*get)(void *_self, void *_item);
 };
 
 struct oc_queue {

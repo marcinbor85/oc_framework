@@ -36,6 +36,7 @@ extern int test_oc_queue_all_tests(void);
 extern int test_oc_fifo_all_tests(void);
 extern int test_oc_lifo_all_tests(void);
 extern int test_oc_list_all_tests(void);
+extern int test_oc_chardev_all_tests(void);
 
 static int all_tests(void)
 {
@@ -49,6 +50,7 @@ static int all_tests(void)
     INCLUDE(test_oc_fifo_all_tests);
     INCLUDE(test_oc_lifo_all_tests);
     INCLUDE(test_oc_list_all_tests);
+    INCLUDE(test_oc_chardev_all_tests);
 
     return 0;
 }

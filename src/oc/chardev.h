@@ -22,30 +22,30 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#ifndef OC_OBJECT_H
-#define OC_OBJECT_H
+#ifndef OC_CHARDEV_H
+#define OC_CHARDEV_H
 
-#include "new.h"
+#include "object.h"
+#include "fifo.h"
 
-struct oc_object_vtable {
-    char* (*to_string)(void *_self);
-    int (*lock)(void *_self);
-    int (*unlock)(void *_self);
-    int (*is_locked)(void *_self);
+struct oc_chardev_vtable {
+    int (*put_callback)(void *_self, int _stat);
+    int (*get_callback)(void *_self, int _stat);
 };
 
-struct oc_object {
-    OC_NEW_CLASS;
-    struct oc_object_vtable *vtable;
-    int locked;
+struct oc_chardev {
+    OC_NEW_CLASS_EXTENDS(oc_object);
+    struct oc_chardev_vtable *vtable;
+    struct oc_queue *input;
+    struct oc_queue *output;
 };
 
-char* oc_object_to_string(void *_self);
-int oc_object_lock(void *_self);
-int oc_object_unlock(void *_self);
-int oc_object_is_locked(void *_self);
+int oc_chardev_put_char(void *_self, char *_char);
+int oc_chardev_get_char(void *_self, char *_char);
+int oc_chardev_pull_output(void *_self, char *_char);
+int oc_chardev_push_input(void *_self, char *_char);
 
-extern const void * oc_object;
+extern const void * oc_chardev;
 
-#endif /* OC_OBJECT_H */
+#endif /* OC_CHARDEV_H */
 

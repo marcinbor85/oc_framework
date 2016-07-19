@@ -87,6 +87,7 @@ int oc_object_is_locked(void *_self)
 static void *ctor(void *_self, va_list *_args)
 {
     struct oc_object *self = _self;
+    self->vtable = NULL;
     self->locked = 0;
     return self;
 }
