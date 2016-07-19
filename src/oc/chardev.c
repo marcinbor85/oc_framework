@@ -22,48 +22,48 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#include "tests.h"
+#include "chardev.h"
 
-int tests_run = 0;
-
-extern int test_oc_new_all_tests(void);
-extern int test_oc_new_singleton_all_tests(void);
-extern int test_oc_new_inherit_all_tests(void);
-extern int test_oc_new_vtable_all_tests(void);
-
-extern int test_oc_object_all_tests(void);
-extern int test_oc_queue_all_tests(void);
-extern int test_oc_fifo_all_tests(void);
-extern int test_oc_lifo_all_tests(void);
-extern int test_oc_list_all_tests(void);
-extern int test_oc_chardev_all_tests(void);
-
-static int all_tests(void)
+int oc_chardev_put_char(void *_self, const char *_char)
 {
-    INCLUDE(test_oc_new_all_tests);
-    INCLUDE(test_oc_new_singleton_all_tests);
-    INCLUDE(test_oc_new_inherit_all_tests);
-    INCLUDE(test_oc_new_vtable_all_tests);
-
-    INCLUDE(test_oc_object_all_tests);
-    INCLUDE(test_oc_queue_all_tests);
-    INCLUDE(test_oc_fifo_all_tests);
-    INCLUDE(test_oc_lifo_all_tests);
-    INCLUDE(test_oc_list_all_tests);
-    INCLUDE(test_oc_chardev_all_tests);
-
+    struct oc_chardev *self = _self;
+    if (self == NULL) return 0;
     return 0;
 }
 
-int main(int argc, char **argv)
+int oc_chardev_get_char(void *_self, const char *_char)
 {
-    int result = all_tests();
-    if (result == 0) {
-        printf("PASSED\n");
-    }
-    printf("Tests run: %d\n", tests_run);
-
-    return result != 0;
+    struct oc_chardev *self = _self;
+    if (self == NULL) return 0;
+    return 0;
 }
 
+int oc_chardev_push_out(void *_self)
+{
+    struct oc_chardev *self = _self;
+    if (self == NULL) return 0;
+    return 0;
+}
+
+int oc_chardev_pull_in(void *_self)
+{
+    struct oc_chardev *self = _self;
+    if (self == NULL) return 0;
+    return 0;
+}
+
+static void *ctor(void *_self, va_list *_args)
+{
+    struct oc_chardev *self = OC_NEW_SUPER_CTOR(oc_object, _self, _args);
+    return self;
+}
+
+static void *dtor(void *_self)
+{
+    struct oc_chardev *self = OC_NEW_SUPER_DTOR(oc_object, _self);
+    return self;
+}
+
+static const struct oc_class _oc_chardev = {sizeof(struct oc_chardev), "oc_chardev", ctor, dtor, NULL};
+const void * oc_chardev = &_oc_chardev;
 
