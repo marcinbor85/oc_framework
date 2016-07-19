@@ -30,6 +30,7 @@ THE SOFTWARE.
 #include <stdint.h>
 #include <stdarg.h>
 #include <string.h>
+#include <malloc.h>
 
 #define OC_NEW_SUPER_CTOR(a,b,c) ((const struct oc_class*)a)->ctor(b,c)
 #define OC_NEW_SUPER_DTOR(a,b) ((const struct oc_class*)a)->dtor(b)

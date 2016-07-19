@@ -45,7 +45,6 @@ int oc_chardev_put_char(void *_self, char *_char)
 int oc_chardev_get_char(void *_self, char *_char)
 {
     struct oc_chardev *self = _self;
-    int stat;
 
     if (self == NULL) return 0;
     if (_char == NULL) return 0;

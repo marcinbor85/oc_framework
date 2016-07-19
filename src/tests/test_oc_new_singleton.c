@@ -60,7 +60,6 @@ static struct oc_test_object *testObj2;
 static int test_ctor(void)
 {
     int var = 1234;
-    int var2 = 5678;
 
     testObj = NULL;
     testObj = oc_new(oc_test_object, var);

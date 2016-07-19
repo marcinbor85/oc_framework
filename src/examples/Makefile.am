@@ -8,3 +8,4 @@ example_list_SOURCES = example_list.c
 example_list_LDADD = ../oc/liboc.a
 example_list_CPPFLAGS = -I../../../src
 
+AM_CFLAGS = -Wall -Werror

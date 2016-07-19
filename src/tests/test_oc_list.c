@@ -78,7 +78,7 @@ static int test_list_iterate(void *_list, void *_item, void *_param)
     struct oc_list *list = _list;
     struct oc_listitem *item = _item;
     int param = *(int*)_param;
-    int v;
+    int v = 0;
 
     ASSERT((param == 100) || (param == 200));
 

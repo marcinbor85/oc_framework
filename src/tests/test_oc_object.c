@@ -35,7 +35,6 @@ struct oc_extended_test_object {
 
 static char* to_string(void *_self)
 {
-    struct oc_extended_test_object *self = _self;
     char *text;
     const char *example = "to_string";
     text = malloc(strlen(example));

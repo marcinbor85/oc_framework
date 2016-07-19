@@ -49,7 +49,6 @@ static int get(void *_self, void *_item)
 
 static char* to_string(void *_self)
 {
-    struct oc_object *self = _self;
     char *text;
     const char *example = "to_string_queue";
     text = malloc(strlen(example));

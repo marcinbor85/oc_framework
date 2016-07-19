@@ -36,13 +36,11 @@ struct oc_test_chardev {
 
 static void put(void *_self)
 {
-    struct oc_test_chardev *self = _self;
     ch = 10;
 }
 
 static void get(void *_self)
 {
-    struct oc_test_chardev *self = _self;
     ch = 20;
 }
 

@@ -3,3 +3,5 @@ tests_SOURCES = tests.c test_oc_new.c test_oc_new_singleton.c test_oc_new_inheri
 include_HEADERS = tests.h
 tests_LDADD = ../oc/liboc.a
 tests_CPPFLAGS = -I../../../src
+
+AM_CFLAGS = -Wall -Werror
