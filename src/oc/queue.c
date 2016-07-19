@@ -28,6 +28,8 @@ int oc_queue_put(void *_self, void *_item)
 {
     struct oc_queue *self = _self;
 
+    if (self == NULL) return 0;
+    if (_item == NULL) return 0;
     if (self->vtable == NULL) return 0;
     if (self->vtable->put == NULL) return 0;
 
@@ -38,6 +40,8 @@ int oc_queue_get(void *_self, void *_item)
 {
     struct oc_queue *self = _self;
 
+    if (self == NULL) return 0;
+    if (_item == NULL) return 0;
     if (self->vtable == NULL) return 0;
     if (self->vtable->get == NULL) return 0;
 
@@ -47,18 +51,21 @@ int oc_queue_get(void *_self, void *_item)
 int oc_queue_is_empty(void *_self)
 {
     struct oc_queue *self = _self;
+    if (self == NULL) return 0;
     return (self->count == 0) ? 1 : 0;
 }
 
 int oc_queue_is_full(void *_self)
 {
     struct oc_queue *self = _self;
+    if (self == NULL) return 0;
     return (self->count == self->buffer_size) ? 1 : 0;
 }
 
 int oc_queue_get_count(void *_self)
 {
     struct oc_queue *self = _self;
+    if (self == NULL) return 0;
     return self->count;
 }
 

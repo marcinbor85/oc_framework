@@ -22,51 +22,29 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#include "tests.h"
+#ifndef OC_CHARDEV_H
+#define OC_CHARDEV_H
 
-#include <oc/chardev.h>
+#include "object.h"
+#include "fifo.h"
 
-static struct oc_chardev *testDev;
+struct oc_chardev_vtable {
+    int (*put_char)(void *, char *);
+    int (*get_char)(void *, char *);
+};
 
-static int test_start(void)
-{
-    testDev = NULL;
-    testDev = oc_new(oc_chardev);
+struct oc_chardev {
+    OC_NEW_CLASS_EXTENDS(oc_object);
+    struct oc_queue *input;
+    struct oc_queue *output;
+};
 
-    ASSERT(testDev != NULL);
-    ASSERT(testDev->input != NULL);
-    ASSERT(testDev->output != NULL);
+int oc_chardev_put_char(void *_self, const char *_char);
+int oc_chardev_get_char(void *_self, const char *_char);
+int oc_chardev_push_out(void *_self);
+int oc_chardev_pull_in(void *_self);
 
-    return 0;
-}
+extern const void * oc_chardev;
 
-static int test_method(void)
-{
-    char *text;
-    int s;
-
-    text = oc_object_to_string(testDev);
-    ASSERT(strcmp(text, "oc_chardev") == 0);
-    free(text);
-
-    return 0;
-}
-
-static int test_stop(void)
-{
-    ASSERT(testDev != NULL);
-    oc_delete(testDev);
-    ASSERT(testDev == NULL);
-
-    return 0;
-}
-
-int test_oc_chardev_all_tests(void)
-{
-    VERIFY(test_start);
-    VERIFY(test_method);
-    VERIFY(test_stop);
-
-    return 0;
-}
+#endif /* OC_CHARDEV_H */
 

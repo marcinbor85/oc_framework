@@ -22,51 +22,48 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#include "tests.h"
+#include "chardev.h"
 
-#include <oc/chardev.h>
-
-static struct oc_chardev *testDev;
-
-static int test_start(void)
+int oc_chardev_put_char(void *_self, const char *_char)
 {
-    testDev = NULL;
-    testDev = oc_new(oc_chardev);
-
-    ASSERT(testDev != NULL);
-    ASSERT(testDev->input != NULL);
-    ASSERT(testDev->output != NULL);
-
+    struct oc_chardev *self = _self;
+    if (self == NULL) return 0;
     return 0;
 }
 
-static int test_method(void)
+int oc_chardev_get_char(void *_self, const char *_char)
 {
-    char *text;
-    int s;
-
-    text = oc_object_to_string(testDev);
-    ASSERT(strcmp(text, "oc_chardev") == 0);
-    free(text);
-
+    struct oc_chardev *self = _self;
+    if (self == NULL) return 0;
     return 0;
 }
 
-static int test_stop(void)
+int oc_chardev_push_out(void *_self)
 {
-    ASSERT(testDev != NULL);
-    oc_delete(testDev);
-    ASSERT(testDev == NULL);
-
+    struct oc_chardev *self = _self;
+    if (self == NULL) return 0;
     return 0;
 }
 
-int test_oc_chardev_all_tests(void)
+int oc_chardev_pull_in(void *_self)
 {
-    VERIFY(test_start);
-    VERIFY(test_method);
-    VERIFY(test_stop);
-
+    struct oc_chardev *self = _self;
+    if (self == NULL) return 0;
     return 0;
 }
+
+static void *ctor(void *_self, va_list *_args)
+{
+    struct oc_chardev *self = OC_NEW_SUPER_CTOR(oc_object, _self, _args);
+    return self;
+}
+
+static void *dtor(void *_self)
+{
+    struct oc_chardev *self = OC_NEW_SUPER_DTOR(oc_object, _self);
+    return self;
+}
+
+static const struct oc_class _oc_chardev = {sizeof(struct oc_chardev), "oc_chardev", ctor, dtor, NULL};
+const void * oc_chardev = &_oc_chardev;
 
