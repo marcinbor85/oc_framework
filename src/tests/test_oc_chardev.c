@@ -28,27 +28,25 @@ THE SOFTWARE.
 
 /* ************************************************ */
 
-static int checker;
+static char ch;
 
 struct oc_test_chardev {
     OC_NEW_CLASS_EXTENDS(oc_chardev);
 };
 
-static int put(void *_self, int _stat)
+static void put(void *_self)
 {
     struct oc_test_chardev *self = _self;
-    checker = 10+_stat;
-    return _stat;
+    ch = 10;
 }
 
-static int get(void *_self, int _stat)
+static void get(void *_self)
 {
     struct oc_test_chardev *self = _self;
-    checker = 20+_stat;
-    return _stat;
+    ch = 20;
 }
 
-static const struct oc_chardev_vtable _vtable = { .put_callback = put, .get_callback  = get };
+static const struct oc_chardev_vtable _vtable = { .post_put = put, .pre_get = get };
 
 static void *ctor(void *_self, va_list *_args)
 {
@@ -86,7 +84,6 @@ static int test_method(void)
 {
     char *text;
     int s;
-    char ch;
 
     text = oc_object_to_string(testDev);
     ASSERT(strcmp(text, "oc_test_chardev") == 0);
@@ -100,60 +97,56 @@ static int test_method(void)
     ASSERT(strcmp(text, "oc_fifo") == 0);
     free(text);
 
-    checker = 0;
+    ch = 0;
     s = oc_chardev_get_char(testDev,&ch);
     ASSERT(s == 0);
-    ASSERT(checker == 20);
+    ASSERT(ch == 20);
 
     ch = 100;
-    checker = 0;
     s = oc_chardev_put_char(testDev,&ch);
     ASSERT(s == 1);
-    ASSERT(checker == 11);
+    ASSERT(ch == 10);
 
-    checker = 0;
+    ch = 10;
     s = oc_chardev_get_char(testDev,&ch);
     ASSERT(s == 0);
-    ASSERT(checker == 20);
+    ASSERT(ch == 20);
 
+    ch = 30;
     s = oc_chardev_pull_output(testDev,&ch);
     ASSERT(s == 1);
     ASSERT(ch == 100);
 
+    ch = 40;
     s = oc_chardev_pull_output(testDev,&ch);
     ASSERT(s == 0);
-    ASSERT(ch == 100);
+    ASSERT(ch == 40);
 
     ch = 50;
     s = oc_chardev_push_input(testDev,&ch);
     ASSERT(s == 1);
     ASSERT(ch == 50);
 
-    checker = 0;
+    ch = 0;
     s = oc_chardev_get_char(testDev,&ch);
     ASSERT(s == 1);
-    ASSERT(checker == 21);
     ASSERT(ch == 50);
 
-    checker = 0;
+    ch = 0;
     s = oc_chardev_get_char(testDev,&ch);
     ASSERT(s == 0);
-    ASSERT(checker == 20);
-    ASSERT(ch == 50);
+    ASSERT(ch == 20);
 
     testDev->super.vtable = NULL;
 
-    checker = 40;
+    ch = 40;
     s = oc_chardev_get_char(testDev,&ch);
     ASSERT(s == 0);
-    ASSERT(checker == 40);
-    ASSERT(ch == 50);
+    ASSERT(ch == 40);
 
     ch = 1;
-    checker = 30;
     s = oc_chardev_put_char(testDev,&ch);
     ASSERT(s == 1);
-    ASSERT(checker == 30);
     ASSERT(ch == 1);
 
     return 0;

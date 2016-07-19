@@ -29,8 +29,8 @@ THE SOFTWARE.
 #include "fifo.h"
 
 struct oc_chardev_vtable {
-    int (*put_callback)(void *_self, int _stat);
-    int (*get_callback)(void *_self, int _stat);
+    void (*post_put)(void *_self);
+    void (*pre_get)(void *_self);
 };
 
 struct oc_chardev {

@@ -35,9 +35,11 @@ int oc_chardev_put_char(void *_self, char *_char)
     stat = oc_queue_put(self->output, _char);
 
     if (self->vtable == NULL) return stat;
-    if (self->vtable->put_callback == NULL) return stat;
+    if (self->vtable->post_put == NULL) return stat;
 
-    return self->vtable->put_callback(self, stat);
+    self->vtable->post_put(self);
+
+    return stat;
 }
 
 int oc_chardev_get_char(void *_self, char *_char)
@@ -48,12 +50,13 @@ int oc_chardev_get_char(void *_self, char *_char)
     if (self == NULL) return 0;
     if (_char == NULL) return 0;
 
-    stat = oc_queue_get(self->input, _char);
+    if (self->vtable != NULL) {
+        if (self->vtable->pre_get != NULL) {
+            self->vtable->pre_get(self);
+        }
+    }
 
-    if (self->vtable == NULL) return stat;
-    if (self->vtable->get_callback == NULL) return stat;
-
-    return self->vtable->get_callback(self, stat);
+    return oc_queue_get(self->input, _char);
 }
 
 int oc_chardev_pull_output(void *_self, char *_char)
